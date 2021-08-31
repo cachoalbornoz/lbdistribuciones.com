@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<FreeFileSync XmlType="GUI" XmlFormat="9">
+    <MainConfig>
+        <Comparison>
+            <Variant>TimeAndSize</Variant>
+            <Symlinks>Exclude</Symlinks>
+            <IgnoreTimeShift/>
+        </Comparison>
+        <SyncConfig>
+            <Variant>Mirror</Variant>
+            <DetectMovedFiles>false</DetectMovedFiles>
+            <DeletionPolicy>RecycleBin</DeletionPolicy>
+            <VersioningFolder Style="Replace"/>
+        </SyncConfig>
+        <GlobalFilter>
+            <Include>
+                <Item>*</Item>
+            </Include>
+            <Exclude>
+                <Item>\System Volume Information\</Item>
+                <Item>\$Recycle.Bin\</Item>
+                <Item>\RECYCLER\</Item>
+                <Item>\RECYCLED\</Item>
+                <Item>*\desktop.ini</Item>
+                <Item>*\thumbs.db</Item>
+            </Exclude>
+            <TimeSpan Type="None">0</TimeSpan>
+            <SizeMin Unit="None">0</SizeMin>
+            <SizeMax Unit="None">0</SizeMax>
+        </GlobalFilter>
+        <FolderPairs>
+            <Pair>
+                <Left>ftp://u621638053@lbdistribuciones.com/web/uploads|ssl|pass64=Y2VydmFudGVz</Left>
+                <Right>C:\xampp\htdocs\lbdistrib\web\uploads</Right>
+            </Pair>
+            <Pair>
+                <Left>ftp://u621638053@lbdistribuciones.com/web/offline|ssl|pass64=Y2VydmFudGVz</Left>
+                <Right>C:\xampp\htdocs\lbdistrib\web\offline</Right>
+            </Pair>
+            <Pair>
+                <Left>ftp://u621638053@lbdistribuciones.com/web/images|ssl|pass64=Y2VydmFudGVz</Left>
+                <Right>C:\xampp\htdocs\lbdistrib\web\images</Right>
+            </Pair>
+            <Pair>
+                <Left>ftp://u621638053@lbdistribuciones.com/src|ssl|pass64=Y2VydmFudGVz</Left>
+                <Right>C:\xampp\htdocs\lbdistrib\src</Right>
+            </Pair>
+            <Pair>
+                <Left>ftp://u621638053@lbdistribuciones.com/app|ssl|pass64=Y2VydmFudGVz</Left>
+                <Right>C:\xampp\htdocs\lbdistrib\app</Right>
+            </Pair>
+        </FolderPairs>
+        <IgnoreErrors>true</IgnoreErrors>
+        <PostSyncCommand Condition="Completion"/>
+    </MainConfig>
+    <GuiConfig>
+        <MiddleGridView>Action</MiddleGridView>
+    </GuiConfig>
+</FreeFileSync>

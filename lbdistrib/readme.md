@@ -1,0 +1,3 @@
+# lbdistribl
+
+LBDistribuciones con Laravel

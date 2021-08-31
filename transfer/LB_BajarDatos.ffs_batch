@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<FreeFileSync XmlType="BATCH" XmlFormat="9">
+    <MainConfig>
+        <Comparison>
+            <Variant>TimeAndSize</Variant>
+            <Symlinks>Exclude</Symlinks>
+            <IgnoreTimeShift/>
+        </Comparison>
+        <SyncConfig>
+            <Variant>Mirror</Variant>
+            <DetectMovedFiles>false</DetectMovedFiles>
+            <DeletionPolicy>RecycleBin</DeletionPolicy>
+            <VersioningFolder Style="Replace"/>
+        </SyncConfig>
+        <GlobalFilter>
+            <Include>
+                <Item>*</Item>
+            </Include>
+            <Exclude>
+                <Item>\System Volume Information\</Item>
+                <Item>\$Recycle.Bin\</Item>
+                <Item>\RECYCLER\</Item>
+                <Item>\RECYCLED\</Item>
+                <Item>*\desktop.ini</Item>
+                <Item>*\thumbs.db</Item>
+            </Exclude>
+            <TimeSpan Type="None">0</TimeSpan>
+            <SizeMin Unit="None">0</SizeMin>
+            <SizeMax Unit="None">0</SizeMax>
+        </GlobalFilter>
+        <FolderPairs>
+            <Pair>
+                <Left>ftp://u621638053@lbdistribuciones.com/web/images/upload|ssl|pass64=Y2VydmFudGVz</Left>
+                <Right>C:\xampp\htdocs\lbdistrib\web\images\upload</Right>
+            </Pair>
+            <Pair>
+                <Left>ftp://u621638053@lbdistribuciones.com/web/uploads/marcas|ssl|pass64=Y2VydmFudGVz</Left>
+                <Right>C:\xampp\htdocs\lbdistrib\web\uploads\marcas</Right>
+            </Pair>
+        </FolderPairs>
+        <IgnoreErrors>true</IgnoreErrors>
+        <PostSyncCommand Condition="Completion"/>
+    </MainConfig>
+    <BatchConfig>
+        <ProgressDialog Minimized="true" AutoClose="true"/>
+        <ErrorDialog>Show</ErrorDialog>
+        <PostSyncAction>None</PostSyncAction>
+        <LogfileFolder Limit="-1"/>
+    </BatchConfig>
+</FreeFileSync>
