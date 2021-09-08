@@ -1,12 +1,13 @@
 <table id="movcontactos" class="table table-bordered table-hover small text-center">
     <thead class="bg-secondary text-white">
-        <td style="width: 15%">Nro</td>
+        <td style="width: 5%">Nro</td>
         <td style="width: 15%">Fecha</td>
         <td style="width: 15%">Concepto</td>
         <td style="width: 15%">Nro</td>
         <td style="width: 15%">Debe</td>
         <td style="width: 15%">Haber</td>
         <td style="width: 15%">Saldo</td>
+        <th style="width: 5%"></th>
     </thead>
     <tbody>
         @foreach ($movcontactos as $movcontacto)
@@ -34,6 +35,11 @@
                     @endif
         @endif
         > {{ number_format($movcontacto->saldo, 2, ',', '.') }}
+        </td>
+        <td>
+            <a href="javascript:eliminarMovContacto({{ $movcontacto->id }})">
+                <i class="fa fa-trash-o text-danger" aria-hidden="true"></i>
+            </a>
         </td>
         </tr>
         @endforeach

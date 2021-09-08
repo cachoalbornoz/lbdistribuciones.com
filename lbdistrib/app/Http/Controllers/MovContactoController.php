@@ -73,7 +73,27 @@ class MovContactoController extends Controller
 
     public function destroy(Request $request)
     {
-        MovContacto::where("id",$request->id)->delete();
-        return response()->json();
+        $movcontacto = MovContacto::find($request->id);
+        $Contacto    = $movcontacto->Contacto;
+        $movcontacto->delete();
+
+        // ACTUALIZO EL SALDO
+        $nuevoSaldo = 0;
+        $movimientos= MovContacto::where('contacto', $Contacto->id)->orderBy('fecha', 'ASC')->get();
+        foreach ($movimientos as $movimiento) {
+            $movimiento->saldo  = $nuevoSaldo + $movimiento->debe - $movimiento->haber;
+            $nuevoSaldo         = $movimiento->saldo;
+            $movimiento->save();
+        }
+        $Contacto->saldo = abs($nuevoSaldo);
+        $Contacto->save();
+
+        $movcontactos = MovContacto::where('contacto', $Contacto->id)
+            ->orderBy('fecha', 'DESC')
+            ->orderBy('id', 'DESC')
+            ->get();
+
+        $vistaMovimientos= view('admin.movcontactos.detalle', compact('movcontactos'))->render();
+        return response()->json($vistaMovimientos);
     }
 }

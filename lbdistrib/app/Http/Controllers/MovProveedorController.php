@@ -40,9 +40,28 @@ class MovProveedorController extends Controller
     public function destroy(Request $request)
     {
         $movproveedor = MovProveedor::find($request->id);
+        $Proveedor    = $movproveedor->Proveedor;
         $movproveedor->delete();
 
-        return response()->json();        
+        ////
+        // ACTUALIZO EL SALDO
+        $nuevoSaldo = 0;
+        $movimientos= MovProveedor::where('proveedor', $Proveedor->id)->orderBy('fecha', 'ASC')->get();
+        foreach ($movimientos as $movimiento) {
+            $movimiento->saldo  = $nuevoSaldo + $movimiento->debe - $movimiento->haber;
+            $nuevoSaldo         = $movimiento->saldo;
+            $movimiento->save();
+        }
+        $Proveedor->saldo = abs($nuevoSaldo);
+        $Proveedor->save();
+
+        $movproveedores = MovProveedor::where('proveedor', $Proveedor->id)
+            ->orderBy('fecha', 'DESC')
+            ->orderBy('id', 'DESC')
+            ->get();
+
+        $vistaMovimientos= view('admin.movproveedores.detalle', compact('movproveedores'))->render();
+        return response()->json($vistaMovimientos);   
     }
 
 }

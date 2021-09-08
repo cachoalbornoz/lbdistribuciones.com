@@ -8,6 +8,7 @@
             <th style="width: 15%">Debe</th>
             <th style="width: 15%">Haber</th>
             <th style="width: 15%">Saldo</th>
+            <th style="width: 5%"></th>
         </tr>
     </thead>
     <tbody>
@@ -20,6 +21,11 @@
                 <td>{{ number_format($movproveedor->debe, 2, ',', '.') }}</td>
                 <td>{{ number_format($movproveedor->haber, 2, ',', '.') }}</td>
                 <td>{{ number_format($movproveedor->saldo, 2, ',', '.') }}</td>
+                <td>
+                    <a href="javascript:eliminarMovProveedor({{ $movproveedor->id }})">
+                        <i class="fa fa-trash-o text-danger" aria-hidden="true"></i>
+                    </a>
+                </td>
             </tr>
         @endforeach
     </tbody>

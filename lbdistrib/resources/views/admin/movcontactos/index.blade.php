@@ -79,9 +79,44 @@
 @section('js')
 
     <script>
-        $(function() {
-            crearDataTable('movcontactos', 0, 1);
-        })
+        crearDataTable('movcontactos', 0, 1);
+
+        const eliminarMovContacto = (id) => {
+
+            ymz.jq_confirm({
+                title: "Eliminar",
+                text: '<div class=" text-center">Confirma ? </div>',
+                no_btn: "No",
+                yes_btn: "Si",
+                no_fn: function() {
+                    return false;
+                },
+                yes_fn: function() {
+                    $(document.body).css({
+                        'cursor': 'wait'
+                    });
+                    var token = $('input[name=_token]').val();
+                    $.ajax({
+                        url: '{{ route('movcontacto.destroy') }}',
+                        headers: {
+                            'X-CSRF-TOKEN': token
+                        },
+                        type: 'POST',
+                        dataType: 'json',
+                        data: {
+                            id,
+                        },
+                        success: function(data) {
+                            $("#detalle").html(data);
+                            $(document.body).css({
+                                'cursor': 'default'
+                            });
+                        }
+                    });
+                }
+            })
+        }
+
 
         $('#filtro').on('click', function() {
 
