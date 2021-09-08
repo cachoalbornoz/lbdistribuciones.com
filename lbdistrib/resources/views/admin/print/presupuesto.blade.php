@@ -33,16 +33,8 @@
             <td class="text-center"><b>- NO VALIDO COMO FACTURA - </b></td>
         </tr>
         <tr>
-            <td>&nbsp;</td>
-            <td></td>
-        </tr>
-        <tr>
             <td>CUIT <b>{{ $comprobante->Contacto->cuit }} </b> </td>
             <td>FECHA <b>{{ date('d/m/Y', strtotime($comprobante->fecha)) }} </b> </td>
-        </tr>
-        <tr>
-            <td></td>
-            <td></td>
         </tr>
         <tr>
             <td>
@@ -50,25 +42,24 @@
             </td>
             <td>PRESUPUESTO N° <b>{{ $comprobante->id }} </b></td>
         </tr>
-        <tr>
-            <td colspan="2">
-                <hr>
-            </td>
-        </tr>
     </table>
 
     @if ($comprobante->detallepresupuesto->count() > 0)
 
-        <table class="table table-bordered text-center" style="font-size:11px;">
-            <caption>DETALLE PRESUPUESTO</caption>
+        <table style="width: 100%" class="text-center mt-4" style="font-size: 1em">
             <tr>
-                <td style=" width: 5 %">#</td>
-                <td style=" width: 40%">Producto</td>
-                <td style=" width: 5 %">PrecioVta</td>
-                <td style=" width: 5 %">Cantidad</td>
-                <td style=" width: 5 %">Dcto</td>
-                <td style=" width: 5 %">%</td>
-                <td style=" width: 10 %">Subtotal</td>
+                <th style=" width: 5 %">#</th>
+                <th style=" width: 40%">Producto</th>
+                <th style=" width: 5 %">P.Venta</th>
+                <th style=" width: 5 %">Cantidad</th>
+                <th style=" width: 5 %">Dcto</th>
+                <th style=" width: 5 %">%</th>
+                <th style=" width: 10 %">Subtotal</th>
+            </tr>
+            <tr>
+                <td colspan="7">
+                    <hr>
+                </td>
             </tr>
             @foreach ($comprobante->detallepresupuesto as $detalle)
                 <tr id="fila{{ $detalle->id }}">
@@ -82,21 +73,67 @@
                 </tr>
 
                 <!-- Revisa si al imprimir el detalle, supera la linea 20. -->
-                @if ($loop->iteration % 14 == 0)
+                @if ($loop->iteration % 34 == 0)
 
         </table>
 
         <div class="page-break"></div>
 
-        <table class="table table-bordered text-center mt-4" style="font-size:11px;">
+        <table width="100%" class="text-center">
             <tr>
-                <td style=" width: 5 %">#</td>
-                <td style=" width: 40 %">Producto</td>
-                <td style=" width: 5 %">PrecioVta</td>
-                <td style=" width: 5 %">Cantidad</td>
-                <td style=" width: 5 %">Dcto</td>
-                <td style=" width: 5 %">%</td>
-                <td style=" width: 10 %">Subtotal</td>
+                <td width="33%">
+                    <hr>
+                </td>
+                <td width="33%"></td>
+                <td width="33%">
+                    <hr>
+                </td>
+            </tr>
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+        </table>
+
+        <table width="100%">
+            <tr>
+                <td>RAZON SOCIAL <b>{{ $comprobante->Contacto->nombreempresa }} ::
+                        {{ $comprobante->Contacto->apellido }},
+                        {{ $comprobante->Contacto->nombres }} </b> </td>
+                <td class="text-center"><b>- NO VALIDO COMO FACTURA - </b></td>
+            </tr>
+            <tr>
+                <td>CUIT <b>{{ $comprobante->Contacto->cuit }} </b> </td>
+                <td>FECHA <b>{{ date('d/m/Y', strtotime($comprobante->fecha)) }} </b> </td>
+            </tr>
+            <tr>
+                <td>
+                    Observaciones: <b>{{ $comprobante->observaciones }} </b>
+                </td>
+                <td>PRESUPUESTO N° <b>{{ $comprobante->id }} </b></td>
+            </tr>
+        </table>
+
+        <table style="width: 100%" class="text-center mt-4" style="font-size: 1em">
+            <tr>
+                <th style=" width: 5 %">#</th>
+                <th style=" width: 40 %">Producto</th>
+                <th style=" width: 5 %">P.Venta</th>
+                <th style=" width: 5 %">Cantidad</th>
+                <th style=" width: 5 %">Dcto</th>
+                <th style=" width: 5 %">%</th>
+                <th style=" width: 10 %">Subtotal</th>
+            </tr>
+            <tr>
+                <td colspan="7">
+                    <hr>
+                </td>
             </tr>
 
     @endif
@@ -104,15 +141,23 @@
 
     @endforeach
 
-    <tr style="font-size:11px;">
-        <td class=" text-right" colspan="6"> TOTAL </td>
-        <td>{{ number_format($comprobante->detallepresupuesto->sum('subtotal'), 2) }}</td>
+    <tr>
+        <th colspan="7">
+            <hr />
+        </th>
     </tr>
     <tr>
-        <td class=" text-left" colspan="7">(*) Precios más impuestos </td>
+        <th class=" text-left" colspan="5">
+            (*) Precios más impuestos
+        </th>
+        <th>
+            TOTAL
+        </th>
+        <th class=" text-right">{{ number_format($comprobante->detallepresupuesto->sum('subtotal'), 2) }}</th>
     </tr>
 
     </table>
+
 @else
     <span class="text-danger"> No hay productos cargados en el presupuesto. </span>
     @endif

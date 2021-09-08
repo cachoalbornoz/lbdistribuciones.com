@@ -82,7 +82,7 @@
 
                 <!-- Revisa si al imprimir el detalle, supera la linea 20. -->
 
-                @if ($loop->iteration % 19 == 0)
+                @if ($loop->iteration % 14 == 0)
         </table>
 
         <div class="page-break"></div>
