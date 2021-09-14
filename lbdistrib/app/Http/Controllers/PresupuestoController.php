@@ -66,11 +66,21 @@ class PresupuestoController extends Controller
         return redirect()->route('detallepresupuesto.index', ['id' => $presupuesto->id]);
     }
 
-    public function edit($id)
+    public function show($id)
     {
         $presupuesto = Presupuesto::find($id);
-
         return redirect()->route('detallepresupuesto.index', ['id' => $presupuesto->id]);
+    }
+
+    public function edit($id)
+    {
+        $presupuesto        = Presupuesto::find($id);
+        $contacto           = Contacto::selectRaw('id, CONCAT(nombreEmpresa," - ",apellido," ",nombres) as nombreCompleto')->orderBy('nombreEmpresa', 'ASC')->pluck('nombreCompleto', 'id');
+        $tipocomprobante    = TipoComprobante::where('id', '=', 1)->orderBy('id', 'DESC')->pluck('comprobante', 'id');
+        $vendedor           = Vendedor::selectRaw('id, CONCAT(apellido," ",nombres) as nombreCompleto')->orderBy('apellido', 'ASC')->pluck('nombreCompleto', 'id');
+        $formapago          = TipoFormapago::orderBy('id', 'DESC')->pluck('forma', 'id');
+
+        return view('admin.presupuestos.edit', compact('presupuesto','contacto', 'tipocomprobante', 'vendedor', 'formapago' ));
     }
 
     public function editPendiente($id)
@@ -110,12 +120,10 @@ class PresupuestoController extends Controller
 
     public function update(Request $request)
     {
-        $presupuesto = Presupuesto::find($request->id);
-
+        $presupuesto = Presupuesto::find($request->presupuesto);
         $presupuesto->fill($request->all());
         $presupuesto->save();
-
-        return response()->json($presupuesto);
+        return redirect()->route('presupuesto.index');
     }
 
     public function destroy(Request $request)

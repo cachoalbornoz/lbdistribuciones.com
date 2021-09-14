@@ -14,7 +14,6 @@
                 <div class="col-xs-12 col-sm-6 col-lg-6">
                     <h5>
                         Presupuesto
-
                         <a href="{{ route('presupuesto.create') }}" class="btn btn-link">
                             (+) Crear
                         </a>
@@ -32,18 +31,20 @@
         <div class="card-body">
 
             <div class="table-responsive">
-                <table class="table small table-hover table-bordered" style="font-size: smaller" id="presupuestos">
+                <table class="table small table-hover table-bordered text-center" style="font-size: smaller"
+                    id="presupuestos">
                     <thead class="bg-secondary text-white">
                         <tr>
-                            <td width="15px">#Nro</td>
+                            <td width="15px">Editar</td>
+                            <td>Fecha pedido</td>
                             <td>Razón social</td>
-                            <td class="text-center"></td>
-                            <td class="text-center">Productos presupuestados</td>
-                            <td class="text-center">Importe total</td>
+                            <td></td>
+                            <td>CantProdPresup.</td>
+                            <td>Importe total</td>
                             <td>Imprime</td>
                             <td>Observaciones</td>
                             <td>Vendedor</td>
-                            <td class="text-center">Modificación</td>
+                            <td>Modificación</td>
                             <td width="15px"> </td>
                         </tr>
                     </thead>
@@ -51,11 +52,14 @@
                         @foreach ($presupuestos as $presupuesto)
 
                             <tr id="fila{{ $presupuesto->id }}">
-                                <td class="text-muted">
-                                    {{ $presupuesto->id }}
-                                </td>
                                 <td>
                                     <a href="{{ route('presupuesto.edit', $presupuesto->id) }}">
+                                        <i class="fa fa-pencil" aria-hidden="true"></i>
+                                    </a>
+                                </td>
+                                <td>{{ $presupuesto->fecha }}</td>
+                                <td class=" text-left">
+                                    <a href="{{ route('presupuesto.show', $presupuesto->id) }}">
                                         @if (isset($presupuesto->Contacto->nombreempresa))
                                             {{ $presupuesto->Contacto->nombreempresa }}
                                         @else
@@ -63,7 +67,7 @@
                                         @endif
                                     </a>
                                 </td>
-                                <td class="text-center">
+                                <td>
                                     @if (is_null($presupuesto->estado))
                                         @can('presupuesto.facturado')
                                             <a href="{{ route('detallepresupuesto.facturacion', $presupuesto->id) }}">
@@ -72,16 +76,17 @@
                                         @endcan
                                     @endif
                                 </td>
-                                <td class="text-center">{{ $presupuesto->productos->count() }}</td>
-                                <td class="text-center">{{ $presupuesto->detallepresupuesto()->sum('subtotal') }}</td>
-                                <td class="text-center">
+                                <td>{{ $presupuesto->productos->count() }}</td>
+                                <td>{{ $presupuesto->detallepresupuesto()->sum('subtotal') }}</td>
+                                <td>
                                     <a href="{{ route('print.presupuesto', $presupuesto->id) }}">
                                         <i class="fa fa-print"></i>
                                     </a>
                                 </td>
-                                <td>{{ $presupuesto->observaciones }}</td>
-                                <td>{{ $presupuesto->Vendedor->nombreCompleto() }}</td>
-                                <td class="text-center">{{ date('d/m/Y H:i', strtotime($presupuesto->updated_at)) }}</td>
+                                <td class=" text-left">{{ $presupuesto->observaciones }}</td>
+                                <td class=" text-left">{{ $presupuesto->Vendedor->nombreCompleto() }}</td>
+                                <td>{{ date('d/m/Y H:i', strtotime($presupuesto->updated_at)) }}
+                                </td>
                                 <td>
                                     @can('presupuesto.destroy')
                                         <button type="button" class="btn btn-default btn-link" id="eliminar" name="eliminar"
@@ -104,9 +109,7 @@
 @section('js')
 
     <script>
-        $(function() {
-            crearDataTable('presupuestos', 0, 0);
-        })
+        crearDataTable('presupuestos', 0, 0);
     </script>
 
 @stop

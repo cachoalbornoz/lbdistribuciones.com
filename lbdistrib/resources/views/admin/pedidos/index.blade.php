@@ -25,8 +25,9 @@
 
         <div class="card-body">
             <div class="table-responsive">
+
                 <table id="pedidos" class="table small table-hover table-bordered text-center" style="font-size: smaller">
-                    <thead>
+                    <thead class="bg-secondary text-white">
                         <tr>
                             <td width="15px">Editar</td>
                             <td>Fecha pedido</td>
@@ -95,6 +96,7 @@
                         @endforeach
                     </tbody>
                 </table>
+
             </div>
         </div>
     </div>
@@ -104,10 +106,7 @@
 @section('js')
 
     <script>
-        $(function() {
-
-            crearDataTable('pedidos', 1, true);
-        })
+        crearDataTable('pedidos', 1, 0);
     </script>
 
 @stop

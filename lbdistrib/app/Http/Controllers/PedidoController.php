@@ -85,7 +85,7 @@ class PedidoController extends Controller
         $pedido = Pedido::find($id);
 
         $contacto       = Contacto::selectRaw('id, CONCAT(nombreEmpresa," - ",apellido," ",nombres) as nombreCompleto')->orderBy('nombreEmpresa', 'ASC')->pluck('nombreCompleto', 'id');
-        $tipocomprobante = TipoComprobante::where('id', '=', 1)->orderBy('id', 'DESC')->pluck('comprobante', 'id');
+        $tipocomprobante= TipoComprobante::where('id', '=', 1)->orderBy('id', 'DESC')->pluck('comprobante', 'id');
         $vendedor       = Vendedor::selectRaw('id, CONCAT(apellido," ",nombres) as nombreCompleto')->orderBy('apellido', 'ASC')->pluck('nombreCompleto', 'id');
         $formapago      = TipoFormapago::orderBy('id', 'DESC')->pluck('forma', 'id');
 
