@@ -83,10 +83,9 @@ class PresupuestoController extends Controller
         return view('admin.presupuestos.edit', compact('presupuesto','contacto', 'tipocomprobante', 'vendedor', 'formapago' ));
     }
 
-    public function editPendiente($id)
-    {
-        // Obtener la info de un pendiente
-        $pendiente = Pendiente::find($id);
+    public function editPendiente($pendienteId, $productoId)
+    {        
+        $pendiente = Pendiente::find($pendienteId);
 
         // Crear Presupuesto
         $presupuesto = Presupuesto::create([
@@ -98,7 +97,7 @@ class PresupuestoController extends Controller
         ]);
 
         // Obtener la info de todos los pendientes
-        $detallePendiente = Pendiente::where('contacto', '=', $pendiente->contacto)->get();
+        $detallePendiente = Pendiente::where('contacto', '=', $pendiente->contacto)->where('producto', '=', $productoId)->get();
 
         foreach ($detallePendiente as $pendiente) {
 
@@ -113,9 +112,42 @@ class PresupuestoController extends Controller
         }
 
         // Borrar los movimientos pendientes
-        Pendiente::where('contacto', '=', $pendiente->contacto)->delete();
+        Pendiente::where('contacto', '=', $pendiente->contacto)->where('producto', '=', $productoId)->delete();
 
         return redirect()->route('detallepresupuesto.index', ['id' => $presupuesto->id]);
+    }
+
+
+    public function pendienteChequed(Request $request)
+    {   
+        // Crear Presupuesto
+        $presupuesto = Presupuesto::create([
+            'tipocomprobante' => 1,
+            'vendedor' => 1,
+            'contacto' => $request->Contacto,
+            'fecha' => date(now()),
+            'formapago' => 2,
+        ]);
+
+        // Obtener la info de todos los pendientes
+        $detallePendiente = Pendiente::where('contacto', '=', $request->Contacto)->whereIn('producto', $request->productos)->get();
+
+        foreach ($detallePendiente as $pendiente) {
+
+            DetallePresupuesto::create([
+                'producto' => $pendiente->producto,
+                'presupuesto' => $presupuesto->id,
+                'precio' => $pendiente->precio,
+                'cantidad' => $pendiente->cantidad,
+                'descuento' => $pendiente->descuento,
+                'subtotal' => $pendiente->subtotal,
+            ]);
+        }
+
+        // Obtener la info de todos los pendientes
+        $detallePendiente = Pendiente::where('contacto', '=', $request->Contacto)->whereIn('producto', $request->productos)->delete();
+
+        return response()->json($presupuesto->id);
     }
 
     public function update(Request $request)

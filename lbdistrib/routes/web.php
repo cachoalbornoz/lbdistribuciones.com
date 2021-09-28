@@ -108,7 +108,8 @@ Route::group(['middleware' => 'preventBackHistory'], function () {
         Route::get('presupuesto/{presupuesto}/edit', ['uses' => 'PresupuestoController@edit', 'as' => 'presupuesto.edit']);
         Route::post('presupuesto/update', ['uses' => 'PresupuestoController@update', 'as' => 'presupuesto.update']);
         Route::get('presupuesto/{presupuesto}/show', ['uses' => 'PresupuestoController@show', 'as' => 'presupuesto.show']);
-        Route::get('presupuesto/{presupuesto}/editPendiente', ['uses' => 'PresupuestoController@editPendiente', 'as' => 'presupuesto.editPendiente']);
+        Route::get('presupuesto/{pendiente}/editPendiente/{producto}', ['uses' => 'PresupuestoController@editPendiente', 'as' => 'presupuesto.editPendiente']);
+        Route::post('presupuesto/pendiente/chequed', ['uses' => 'PresupuestoController@pendienteChequed', 'as' => 'presupuesto.pendienteChequed']);
 
         Route::get('movcontacto/{id}/index', ['uses' => 'MovContactoController@index', 'as' => 'movcontacto.index']);
         Route::get('movcontacto/{id}/deuda', ['uses' => 'MovContactoController@deuda', 'as' => 'movcontacto.deuda']);
