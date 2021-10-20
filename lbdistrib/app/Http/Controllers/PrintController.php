@@ -23,6 +23,7 @@ use App\Models\MovContacto,
     App\Models\Compra,
     App\Models\DetalleCompra,
     App\Models\Producto,
+	App\Models\Rubro,
     App\Models\Marca;
 
 use DB, PDF; 
@@ -214,6 +215,15 @@ class PrintController extends Controller{
         return $pdf->stream('productos.pdf');
     }
 
+    public function printProductosForm(){
+
+        $rubro      = Rubro::orderBy('nombre', 'ASC')->pluck('nombre', 'id');
+        $marca      = Marca::orderBy('nombre', 'ASC')->pluck('nombre', 'id');
+        $proveedor  = Proveedor::orderBy('nombreempresa', 'ASC')->get();
+        
+        return view('admin.productos.indexPrint', compact('rubro', 'marca', 'proveedor'));
+    }
+
     public function printProductoProveedor($idProveedor){
 
         $productos = Proveedor::find($idProveedor)->productos()->orderBy('nombre')->get();
@@ -234,15 +244,13 @@ class PrintController extends Controller{
             $marca      = 'Marcas';
 
             $buscar = array();
-
             foreach($cadena as $cad){
-
-                $buscar[] = $cad;
-            }
+                $buscar[] = $cad;            }
 
             $productos = DB::table('producto as t1')
                 ->join('marca as t2', 't1.marca', '=', 't2.id')
-                ->select('t1.*', 't2.nombre as nombremarca')
+                ->join('rubro as t3', 't1.rubro', '=', 't3.id')
+                ->select('t1.*', 't2.nombre as nombremarca', 't3.nombre as nombrerubro')
                 ->orderBy('t2.nombre', 'ASC')->orderBy('t1.codigobarra', 'ASC')
                 ->whereIn('marca', $buscar)
                 ->get();
@@ -251,7 +259,8 @@ class PrintController extends Controller{
 
             $productos = DB::table('producto as t1')
                 ->join('marca as t2', 't1.marca', '=', 't2.id')
-                ->select('t1.*', 't2.nombre as nombremarca')
+                ->join('rubro as t3', 't1.rubro', '=', 't3.id')
+                ->select('t1.*', 't2.nombre as nombremarca', 't3.nombre as nombrerubro')
                 ->orderBy('t1.codigobarra', 'ASC')
                 ->where('marca', $marcas)
                 ->get();
@@ -261,6 +270,45 @@ class PrintController extends Controller{
         $pdf = PDF::loadView('admin.print.listaproductos', compact('productos' , 'marca'));
 
         return $pdf->stream($marca);
+    }
+
+    public function printProductoRubros($rubros){
+
+        $cadena     = explode(',', $rubros); 
+
+        if(isset($cadena[1])){
+
+            // SI TIENE MAS DE UN CODIGO EN LA DIRECCION, ENTONCES BUSCO MAS DE UNA MARCA
+
+            $rubro      = 'Rubros';
+
+            $buscar = array();
+            foreach($cadena as $cad){
+                $buscar[] = $cad;            }
+
+            $productos = DB::table('producto as t1')
+                ->join('rubro as t2', 't1.rubro', '=', 't2.id')
+                ->join('marca as t3', 't1.marca', '=', 't3.id')
+                ->select('t1.*', 't2.nombre as nombrerubro', 't3.nombre as nombremarca')
+                ->orderBy('t2.nombre', 'ASC')->orderBy('t1.codigobarra', 'ASC')
+                ->whereIn('rubro', $buscar)
+                ->get();
+
+        }else{
+
+            $productos = DB::table('producto as t1')
+                ->join('rubro as t2', 't1.rubro', '=', 't2.id')
+                ->join('marca as t3', 't1.marca', '=', 't3.id')
+                ->select('t1.*', 't2.nombre as nombrerubro', 't3.nombre as nombremarca')
+                ->orderBy('t1.codigobarra', 'ASC')
+                ->where('rubro', $rubros)
+                ->get();
+            $rubro      = $productos[0]->nombrerubro;
+        }
+
+        $pdf = PDF::loadView('admin.print.listaproductos', compact('productos' , 'rubro'));
+
+        return $pdf->stream($rubro);
     }
 
 }

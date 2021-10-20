@@ -24,7 +24,7 @@
                                 </a>
                             @endcan
                             &nbsp;| &nbsp;
-                            <a href="{{ route('print.productolistado') }}" class="btn btn-link"> Imprime lista</a>
+                            <a href="{{ route('print.productoForm') }}" class="btn btn-link"> Opciones de Impresión</a>
                             &nbsp;| &nbsp;
                             <a href="{{ route('producto.excel') }}" class="btn btn-link">Exportar Excel</a>
                             &nbsp;| &nbsp;

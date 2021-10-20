@@ -87,7 +87,9 @@ Route::group(['middleware' => 'preventBackHistory'], function () {
         Route::get('print/printComprobanteProv/{idcomprobante}/{tipocomprobante}', ['uses' => 'PrintController@printComprobanteProv', 'as' => 'print.comprobanteprov']);
         Route::get('print/{idproveedor}/printProductoProveedor', ['uses' => 'PrintController@printProductoProveedor', 'as' => 'print.productoproveedor']);
         Route::get('print/printProductoMarcas/{marcas?}', ['uses' => 'PrintController@printProductoMarcas', 'as' => 'print.productomarcas']);
+        Route::get('print/printProductoRubros/{rubros?}', ['uses' => 'PrintController@printProductoRubros', 'as' => 'print.productorubros']);
         Route::get('print/printProductos', ['uses' => 'PrintController@printProductos', 'as' => 'print.productolistado']);
+        Route::get('print/printProductos/form', ['uses' => 'PrintController@printProductosForm', 'as' => 'print.productoForm']);
 
         Route::resource('pedido', 'PedidoController');
         Route::get('pedido/facturado/{id}', ['uses' => 'PedidoController@facturado', 'as' => 'pedido.facturado']);
