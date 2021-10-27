@@ -10,6 +10,8 @@ use App\Models\Pedido,
     App\Models\DetallePedido,
     App\Models\Producto;
 
+use Auth;    
+
 class DetallePedidoController extends Controller
 {
     public function __construct()
@@ -19,12 +21,17 @@ class DetallePedidoController extends Controller
 
     public function index(Request $request)
     {
+
+        // Revisar si antes de hacer el pedido, tiene ROL vendedor y ver cuales son las MARCAS que puede vender
+        // 1 EsVendedor
+        // 0 No es vendedor
+
         if ($request->ajax()) {
 
             if ($request->palabra) {
-                $productos      = Producto::activo(1)->buscarnombre($request->palabra)->orderBy('codigobarra', 'ASC')->paginate(10);
+                $productos      = Producto::activo(1)->vendedor()->buscarnombre($request->palabra)->orderBy('codigobarra', 'ASC')->paginate(10);
             } else {
-                $productos      = Producto::activo(1)->orderBy('codigobarra', 'ASC')->paginate(10);
+                $productos      = Producto::activo(1)->vendedor()->orderBy('codigobarra', 'ASC')->paginate(10);
             }
             $view               = view('admin.detallepedidos.detalleproducto', compact('productos'))->render();
 
@@ -32,9 +39,9 @@ class DetallePedidoController extends Controller
         }
 
         if ($request->palabra) {
-            $productos      = Producto::activo(1)->buscarnombre($request->palabra)->orderBy('codigobarra', 'ASC')->paginate(10);
+            $productos      = Producto::activo(1)->vendedor()->buscarnombre($request->palabra)->orderBy('codigobarra', 'ASC')->paginate(10);
         } else {
-            $productos      = Producto::activo(1)->orderBy('codigobarra', 'ASC')->paginate(10);
+            $productos      = Producto::activo(1)->vendedor()->orderBy('codigobarra', 'ASC')->paginate(10);
         }
 
         $pedido         = Pedido::where('id', $request->id)->first();

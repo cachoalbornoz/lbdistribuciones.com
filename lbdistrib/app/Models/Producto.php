@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Auth;
 
 class Producto extends Model {
 
@@ -41,7 +42,6 @@ class Producto extends Model {
         }
     }
 
-    
     public function scopebuscarrubro($query, $rubro)
     {
         if ($rubro) {
@@ -53,6 +53,16 @@ class Producto extends Model {
     {
         if ($activo) {
             return $query->where('activo', $activo);
+        }
+    }
+
+    public function scopevendedor($query)
+    {
+        $vendedor = Auth::user()->esVendedor();
+
+        if ($vendedor == 1) {
+            $marcas = Auth::user()->marcas()->pluck('id');
+            return $query->whereIn('marca', $marcas);
         }
     }
 

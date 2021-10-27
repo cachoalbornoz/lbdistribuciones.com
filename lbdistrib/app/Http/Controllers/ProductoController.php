@@ -31,7 +31,7 @@ class ProductoController extends Controller
     {
         if ($request->ajax()) {
 
-            $producto    = Producto::all();
+            $producto    = Producto::vendedor()->get();
 
             if ($producto) {
                 return Datatables::of($producto)

@@ -21,14 +21,20 @@
                                 <a href="{{ route('producto.estadisticas') }}" class="btn btn-link"
                                     title="Estadistica de ventas">
                                     Estadisticas
+                                    &nbsp;| &nbsp;
+                                    <a href="{{ route('print.productoForm') }}" class="btn btn-link">
+                                        Opciones de Impresión
+                                    </a>
+                                    &nbsp;| &nbsp;
+                                    <a href="{{ route('producto.excel') }}" class="btn btn-link">
+                                        Exportar Excel
+                                    </a>
+                                    &nbsp;| &nbsp;
+                                    <a href="{{ route('actualizacion.parametro') }}" class="btn btn-link">
+                                        Actualizaciones
+                                    </a>
                                 </a>
                             @endcan
-                            &nbsp;| &nbsp;
-                            <a href="{{ route('print.productoForm') }}" class="btn btn-link"> Opciones de Impresión</a>
-                            &nbsp;| &nbsp;
-                            <a href="{{ route('producto.excel') }}" class="btn btn-link">Exportar Excel</a>
-                            &nbsp;| &nbsp;
-                            <a href="{{ route('actualizacion.parametro') }}" class="btn btn-link">Actualizaciones</a>
                         </small>
                     </h5>
 

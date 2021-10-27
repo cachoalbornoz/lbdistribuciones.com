@@ -18,8 +18,10 @@
                     </h5>
                 </div>
                 <div class="col-xs-12 col-sm-6 col-lg-6">
-                    <a href="{{ route('pedido.facturado', 0) }}" class="btn btn-link"> Pedidos facturados </a>
-                </div>
+                    @can('producto.destroy')
+                        <a href="{{ route('pedido.facturado', 0) }}" class="btn btn-link"> Pedidos facturados </a>
+                    </div>
+                @endcan
             </div>
         </div>
 

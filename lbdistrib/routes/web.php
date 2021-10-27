@@ -53,6 +53,10 @@ Route::group(['middleware' => 'preventBackHistory'], function () {
         Route::get('compra/{idproveedor}/compraProveedor', ['uses' => 'CompraController@compraProveedor', 'as' => 'compra.compraProveedor']);
         Route::get('compra/create/{id?}', ['uses' => 'CompraController@create', 'as' => 'compra.create']);
 
+        Route::get('vendedor/', ['uses' => 'VendedorController@index', 'as' => 'vendedor.index']);
+        Route::get('vendedor/asociar/{id}', ['uses' => 'VendedorController@asociar', 'as' => 'vendedor.asociar']);
+        Route::post('vendedor/', ['uses' => 'VendedorController@update', 'as' => 'vendedor.update']);
+
         Route::resource('contacto', 'ContactoController');
         Route::get('contacto/{contacto}/show', ['uses' => 'ContactoController@show', 'as' => 'contacto.show']);
         Route::post('contacto/destroy', ['uses' => 'ContactoController@destroy', 'as' => 'contacto.destroy']);
@@ -88,6 +92,7 @@ Route::group(['middleware' => 'preventBackHistory'], function () {
         Route::get('print/{idproveedor}/printProductoProveedor', ['uses' => 'PrintController@printProductoProveedor', 'as' => 'print.productoproveedor']);
         Route::get('print/printProductoMarcas/{marcas?}', ['uses' => 'PrintController@printProductoMarcas', 'as' => 'print.productomarcas']);
         Route::get('print/printProductoRubros/{rubros?}', ['uses' => 'PrintController@printProductoRubros', 'as' => 'print.productorubros']);
+        Route::get('print/printProductoRubroMarca/{rubros?}/{marcas?}', ['uses' => 'PrintController@printProductoRubroMarca', 'as' => 'print.productorubromarca']);
         Route::get('print/printProductos', ['uses' => 'PrintController@printProductos', 'as' => 'print.productolistado']);
         Route::get('print/printProductos/form', ['uses' => 'PrintController@printProductosForm', 'as' => 'print.productoForm']);
 

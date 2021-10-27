@@ -19,8 +19,8 @@
             <ul class="navbar-nav mr-auto">
 
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
-                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+                        aria-haspopup="true" aria-expanded="false">
                         Movimientos
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
@@ -207,6 +207,11 @@
                                 <i class="fa fa-address-card text-info" aria-hidden="true"></i>
                                 Roles
                             </a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="{{ route('vendedor.index') }}">
+                                <i class="fa fa-address-card text-info" aria-hidden="true"></i>
+                                Vendedores
+                            </a>
 
                         </div>
                     </li>
@@ -220,7 +225,8 @@
                         aria-expanded="false">
 
                         <small>
-                            {{ Auth::user()->name }} (<i class="fa fa-circle text-info"></i> on-line)
+                            {{ Auth::user()->name }} ({{ Auth::user()->tieneRol() }} <i
+                                class="fa fa-circle text-info"></i> )
                         </small>
                     </a>
                     <ul class="dropdown-menu">

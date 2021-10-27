@@ -12,4 +12,8 @@ class Marca extends Model {
         return $this->belongsToMany(Proveedor::class);
     }
 
+    public function users(){
+        return $this->belongsToMany(User::class);
+    }
+
 }
