@@ -28,7 +28,7 @@
                 <table class="table small table-bordered table-hover" style="font-size: smaller" id="presupuestosp">
                     <thead class="bg-secondary text-white">
                         <tr>
-                            <th width="15px">#Nro</th>
+                            <th class="text-center" width="15px">Editar</th>
                             <th>Razón social</th>
                             <th class="text-center">Productos presupuestados</th>
                             <th class="text-center">Importe total</th>
@@ -42,11 +42,13 @@
                         @foreach ($presupuestos as $presupuesto)
 
                             <tr id="fila{{ $presupuesto->id }}">
-                                <td>
-                                    {{ $presupuesto->id }}
+                                <td class="text-center">
+                                    <a href="{{ route('presupuestop.edit', $presupuesto->id) }}">
+                                        <i class="fa fa-pencil" aria-hidden="true"></i>
+                                    </a>
                                 </td>
                                 <td>
-                                    <a href="{{ route('presupuestop.edit', $presupuesto->id) }}">
+                                    <a href="{{ route('presupuestop.show', $presupuesto->id) }}">
                                         @if (isset($presupuesto->Proveedor->nombreempresa))
                                             {{ $presupuesto->Proveedor->nombreempresa }}
                                         @else
@@ -64,7 +66,8 @@
                                     </a>
                                 </td>
                                 <td>{{ $presupuesto->observaciones }}</td>
-                                <td class="text-center">{{ date('d/m/Y H:i', strtotime($presupuesto->updated_at)) }}</td>
+                                <td class="text-center">{{ date('d/m/Y H:i', strtotime($presupuesto->updated_at)) }}
+                                </td>
                                 <td>
                                     @can('presupuesto.destroy')
                                         <button type="button" class="btn btn-link" id="eliminar" name="eliminar"

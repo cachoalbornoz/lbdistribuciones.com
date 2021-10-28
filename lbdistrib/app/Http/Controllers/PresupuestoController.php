@@ -83,6 +83,14 @@ class PresupuestoController extends Controller
         return view('admin.presupuestos.edit', compact('presupuesto','contacto', 'tipocomprobante', 'vendedor', 'formapago' ));
     }
 
+    public function update(Request $request)
+    {
+        $presupuesto = Presupuesto::find($request->presupuesto);
+        $presupuesto->fill($request->all());
+        $presupuesto->save();
+        return redirect()->route('presupuesto.index');
+    }
+
     public function editPendiente($pendienteId, $productoId)
     {        
         $pendiente = Pendiente::find($pendienteId);
@@ -117,7 +125,6 @@ class PresupuestoController extends Controller
         return redirect()->route('detallepresupuesto.index', ['id' => $presupuesto->id]);
     }
 
-
     public function pendienteChequed(Request $request)
     {   
         // Crear Presupuesto
@@ -148,14 +155,6 @@ class PresupuestoController extends Controller
         $detallePendiente = Pendiente::where('contacto', '=', $request->Contacto)->whereIn('producto', $request->productos)->delete();
 
         return response()->json($presupuesto->id);
-    }
-
-    public function update(Request $request)
-    {
-        $presupuesto = Presupuesto::find($request->presupuesto);
-        $presupuesto->fill($request->all());
-        $presupuesto->save();
-        return redirect()->route('presupuesto.index');
     }
 
     public function destroy(Request $request)

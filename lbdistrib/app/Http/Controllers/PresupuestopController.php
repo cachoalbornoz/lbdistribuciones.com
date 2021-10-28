@@ -30,7 +30,6 @@ class PresupuestopController extends Controller
     public function index()
     {
         $presupuestos   = Presupuestop::activo()->orderBy('id', 'DESC')->get();
-
         return view('admin.presupuestosp.index', compact('presupuestos'));
     }
 
@@ -51,21 +50,28 @@ class PresupuestopController extends Controller
         return redirect()->route('detallepresupuestop.index', ['id' => $presupuesto->id]);
     }
 
+    public function show($id)
+    {
+        $presupuesto = Presupuestop::find($id);
+        return redirect()->route('detallepresupuestop.index', ['id' => $presupuesto->id]);
+    }
+
     public function edit($id)
     {
-        $presupuesto   = Presupuestop::find($id);
+        $presupuesto    = Presupuestop::find($id);
+        $proveedor      = Proveedor::selectRaw('id, CONCAT(nombreEmpresa," - ",apellido," ",nombres) as nombreCompleto')->orderBy('nombreEmpresa', 'ASC')->pluck('nombreCompleto', 'id');
+        $tipocomprobante= TipoComprobante::where('id', '=', 2)->orderBy('id', 'DESC')->pluck('comprobante', 'id');
+        $formapago      = TipoFormapago::orderBy('id', 'DESC')->pluck('forma', 'id');
 
-        return redirect()->route('detallepresupuestop.index', ['id' => $presupuesto->id]);
+        return view('admin.presupuestosp.edit', compact('presupuesto','proveedor', 'tipocomprobante', 'formapago' ));
     }
 
     public function update(Request $request)
     {
         $presupuesto = Presupuestop::find($request->id);
-
         $presupuesto->fill($request->all());
         $presupuesto->save();
-
-        return response()->json($presupuesto);
+        return redirect()->route('presupuestop.index');
     }
 
 

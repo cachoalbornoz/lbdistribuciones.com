@@ -96,9 +96,8 @@
         <table style="width:100%;">
             <tr>
                 <th style="width:5%;">#</th>
-                <th style="width:60%;">Nombre producto</th>
-                <th style="width:15%;">Marca</th>
-                <th style="width:15%;">Rubro</th>
+                <th style="width:75%;">Nombre producto</th>
+                <th class=" text-center" style="width:15%;">Marca</th>
                 <th style="width:10%;">Imagen</th>
                 <th style="width:5%;">Precio</th>
             </tr>
@@ -111,17 +110,12 @@
                 <td style="width:5%;">
                     {{ $loop->iteration }}
                 </td>
-                <td style="width:60%;">
+                <td style="width:75%;">
                     {{ substr($producto->nombre, 0, 90) }}
                 </td>
-                <td style="width:15%;">
+                <td class=" text-center" style="width:15%;">
                     @isset($producto->nombremarca)
                         {{ $producto->nombremarca }}
-                    @endisset
-                </td>
-                <td style="width:15%;">
-                    @isset($producto->nombrerubro)
-                        {{ $producto->nombrerubro }}
                     @endisset
                 </td>
                 <td style="width:10%;">

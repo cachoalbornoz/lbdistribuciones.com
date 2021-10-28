@@ -107,6 +107,7 @@ Route::group(['middleware' => 'preventBackHistory'], function () {
         Route::post('presupuestop/destroy', ['uses' => 'PresupuestopController@destroy', 'as' => 'presupuestop.destroy']);
         Route::get('presupuestop/descartar/{id}', ['uses' => 'PresupuestopController@descartar', 'as' => 'presupuestop.descartar']);
         Route::get('presupuestop/{presupuesto}/edit', ['uses' => 'PresupuestopController@edit', 'as' => 'presupuestop.edit']);
+        Route::post('presupuestop/update/', ['uses' => 'PresupuestopController@update', 'as' => 'presupuestop.update']);
 
         Route::resource('presupuesto', 'PresupuestoController');
         Route::get('presupuesto/facturado/{id}', ['uses' => 'PresupuestoController@facturado', 'as' => 'presupuesto.facturado']);
