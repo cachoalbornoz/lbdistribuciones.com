@@ -26,7 +26,6 @@ class PresupuestopRequest extends FormRequest
         return [
             'proveedor'         => 'required',
             'fecha'             => 'required',
-            'observaciones'     => 'required',
         ];
     }
 
@@ -35,7 +34,6 @@ class PresupuestopRequest extends FormRequest
         return [
             'proveedor.required'        => 'Proveedor es obligatorio',
             'fecha.required'            => 'Fecha es obligatorio',
-            'observaciones.required'    => 'Observaciones son obligatorias cargarlas',
         ];
     }
 }

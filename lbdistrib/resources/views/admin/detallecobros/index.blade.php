@@ -81,7 +81,7 @@
                     <input type="hidden" id="Valores" name="Valores" value="0">
                 </div>
                 <div class="col-xs-12 col-sm-2 col-lg-2 text-center">
-                    <input type="hidden" id="inputado" name="inputado" value="{{ number_format($totalCobrado, 2) }}">
+                    <input type="hidden" id="inputado" name="inputado" value="{{ $totalCobrado }}">
                 </div>
                 <div class="col-xs-12 col-sm-1 col-lg-1 text-center">
                     <div class="input-group-prepend">
@@ -284,18 +284,18 @@
             }
 
             // Revisar si imputó pagos, los pueda cubrir con la suma de Efectivo + Cheques
-            var numberOfChecked = $('input:checkbox:checked').length;
-            if ((numberOfChecked > 0) && (pendiente < 0)) {
-                ymz.jq_alert({
-                    title: "Atención",
-                    text: `Está inputando ${numberOfChecked} recibos y pero aún falta cobrar $<b>${Math.abs(pendiente)}</b>`,
-                    ok_btn: "Ok",
-                    close_fn: () => {
-                        $('#importeEfectivo').select()
-                    }
-                });
-                return false;
-            }
+            // var numberOfChecked = $('input:checkbox:checked').length;
+            // if ((numberOfChecked > 0) && (pendiente < 0)) {
+            //     ymz.jq_alert({
+            //         title: "Atención",
+            //         text: `Está inputando ${numberOfChecked} recibos y pero aún falta cobrar $<b>${Math.abs(pendiente)}</b>`,
+            //         ok_btn: "Ok",
+            //         close_fn: () => {
+            //             $('#importeEfectivo').select()
+            //         }
+            //     });
+            //     return false;
+            // }
 
             ymz.jq_confirm({
                 title: "Guardar",

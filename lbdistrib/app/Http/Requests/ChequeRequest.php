@@ -30,7 +30,6 @@ class ChequeRequest extends FormRequest
             'nrocheque'     => 'required',
             'importe'       => 'required',
             'banco'         => 'required',
-            
         ];
     }
 

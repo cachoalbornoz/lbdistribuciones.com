@@ -153,9 +153,6 @@
                             <a class="dropdown-item" href="{{ route('producto.index') }}">
                                 <i class="fa fa-barcode text-info" aria-hidden="true"></i>
                                 Lista de productos
-                                <span class="pull-right-container">
-                                    <span class="badge text-info">{{ $nro_productos }}</span>
-                                </span>
                             </a>
 
                         @endcan

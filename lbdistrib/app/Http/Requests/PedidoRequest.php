@@ -27,7 +27,6 @@ class PedidoRequest extends FormRequest
             'contacto'          => 'required',
             'fecha'             => 'required',
             'vendedor'          => 'required',
-            'observaciones'     => 'required',
         ];
     }
 
@@ -37,7 +36,6 @@ class PedidoRequest extends FormRequest
             'contacto.required'         => 'Cliente es obligatorio',
             'fecha.required'            => 'Fecha es obligatorio',
             'vendedor.required'         => 'Vendedor es obligatorio',
-            'observaciones.required'    => 'Observaciones son obligatorias cargarlas',
         ];
     }
 }

@@ -113,8 +113,8 @@ class VentaController extends Controller
     public function store(VentaRequest $request)
     {
         $venta = new Venta($request->all());
+        ($request->tipocomprobante == 8)?$venta->pagada = 1:null;
         $venta->save();
-
         return redirect()->route('detalleventa.index', ['id' => $venta->id]);
     }
 
