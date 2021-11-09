@@ -49,7 +49,9 @@ class DetalleCompraController extends Controller
         $detalle->descuento1        = $request->descuento1;
 
         $detalle->montodesc         = ($request->descuento > 0) ? $subtotal * ($request->descuento / 100) : 0;
-        $detalle->montodesc1        = ($request->descuento1 > 0) ? $subtotal * ($request->descuento1 / 100) : 0;
+
+        $detalle->montodesc1        = ($request->descuento1 > 0) ? ($subtotal-$detalle->montodesc) * ($request->descuento1 / 100) : 0;
+        
         $detalle->montoiva          = ($request->iva > 0) ? ($subtotal - $detalle->montodesc - $detalle->montodesc1) * ($request->iva / 100) : 0;
 
         $detalle->subtotal          = $subtotal + $detalle->montoiva - $detalle->montodesc - $detalle->montodesc1;
