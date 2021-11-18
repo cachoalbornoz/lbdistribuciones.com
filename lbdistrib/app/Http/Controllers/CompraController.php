@@ -138,7 +138,23 @@ class CompraController extends Controller
         }
 
         $proveedor->saldo = $nuevoSaldo;
-        $proveedor->save();        
+        $proveedor->save();     
+        
+        // BUSCO EL SALDO A ESA FECHA
+        $datos      = MovProveedor::where('proveedor', $compra->proveedor)
+            ->whereDate('fecha', '<=', $compra->fecha)
+            ->orderBy('fecha', 'DESC')
+            ->orderBy('id', 'DESC')->first();
+
+        if (isset($datos)) {
+            if ($request->tipocomprobante == 8) {   // NOTA CREDITO
+                $nuevoSaldo = $datos->saldo - $compra->total;
+            } else {
+                $nuevoSaldo = $datos->saldo + $compra->total;
+            }
+        } else {
+            $nuevoSaldo = $compra->total;
+        }
 
         /////// AGREGA MOVIMIENTO DE CTA CTE
         $movimiento = new MovProveedor();

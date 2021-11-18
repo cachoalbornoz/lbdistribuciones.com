@@ -207,7 +207,6 @@ class VentaController extends Controller
         $movimiento->debe           = $debe;
         $movimiento->haber          = $haber;
         $movimiento->saldo          = $nuevoSaldo;
-
         $movimiento->save();
 
         // ACTUALIZO LOS SALDOS
