@@ -163,19 +163,19 @@
                 return false;
             }
 
-            // Revisar si imputó pagos, los pueda cubrir con la suma de Efectivo + Cheques
-            var numberOfChecked = $('input:checkbox:checked').length;
-            if ((numberOfChecked > 0) && (pendiente < 0)) {
-                ymz.jq_alert({
-                    title: "Atención",
-                    text: `Está inputando ${numberOfChecked} recibos y pero aún falta $<b>${Math.abs(pendiente)}</b>`,
-                    ok_btn: "Ok",
-                    close_fn: () => {
-                        $('#importeEfectivo').select()
-                    }
-                });
-                return false;
-            }
+            // // Revisar si imputó pagos, los pueda cubrir con la suma de Efectivo + Cheques
+            // var numberOfChecked = $('input:checkbox:checked').length;
+            // if ((numberOfChecked > 0) && (pendiente < 0)) {
+            //     ymz.jq_alert({
+            //         title: "Atención",
+            //         text: `Está inputando ${numberOfChecked} recibos y pero aún falta $<b>${Math.abs(pendiente)}</b>`,
+            //         ok_btn: "Ok",
+            //         close_fn: () => {
+            //             $('#importeEfectivo').select()
+            //         }
+            //     });
+            //     return false;
+            // }
 
             ymz.jq_confirm({
                 title: "Guardar",
