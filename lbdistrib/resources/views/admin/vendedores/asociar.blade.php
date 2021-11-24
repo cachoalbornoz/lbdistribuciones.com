@@ -13,7 +13,7 @@
             <div class="card">
                 <div class="card-header">
                     <h5>
-                        Vincular marcas al vendedor
+                        Asociar marcas al vendedor
                     </h5>
                 </div>
             </div>
@@ -42,7 +42,7 @@
             <div class="card">
                 <div class="card-header">
                     <h5>
-                        Lista de Marcas a asociar - vendedor :: <b>{{ $vendedor->name }}</b>
+                        Detalle :: <b>{{ $vendedor->name }}</b>
                     </h5>
                 </div>
 
