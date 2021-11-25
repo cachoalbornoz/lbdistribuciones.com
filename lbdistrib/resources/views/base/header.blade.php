@@ -32,16 +32,14 @@
                                     <span class="badge text-info">{{ $nro_pedidos }}</span>
                                 @endcan
                             </a>
+                            @can('contacto.destroy')
+                                <div class="dropdown-divider"></div>
 
-                            <div class="dropdown-divider"></div>
-
-                            <a class="dropdown-item" href="{{ route('presupuesto.index') }}">
-                                <i class="fa fa-calculator text-info" aria-hidden="true"></i>
-                                Presupuestos
-                                @can('contacto.destroy')
-                                    <span class="badge text-info">{{ $nro_presupuestos }}</span>
-                                @endcan
-                            </a>
+                                <a class="dropdown-item" href="{{ route('presupuesto.index') }}">
+                                    <i class="fa fa-calculator text-info" aria-hidden="true"></i>
+                                    Presupuestos <span class="badge text-info">{{ $nro_presupuestos }}</span>
+                                </a>
+                            @endcan
 
                         @endcan
 
