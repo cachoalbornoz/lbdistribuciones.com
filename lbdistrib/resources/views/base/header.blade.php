@@ -144,12 +144,12 @@
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
                             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            Administracion
+                            Vendedores
                         </a>
                         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                             <a class="dropdown-item" href="{{ route('vendedor.index') }}">
                                 <i class="fa fa-address-card text-info" aria-hidden="true"></i>
-                                Vendedores
+                                Listado
                             </a>
                         </div>
                     </li>

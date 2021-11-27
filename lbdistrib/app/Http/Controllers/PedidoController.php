@@ -57,38 +57,47 @@ class PedidoController extends Controller
 
     public function create()
     {
-        $contacto       = Contacto::selectRaw('id, CONCAT(nombreEmpresa," - ",apellido," ",nombres) as nombreCompleto')->orderBy('nombreEmpresa', 'ASC')->pluck('nombreCompleto', 'id');
-        $tipocomprobante = TipoComprobante::where('id', '=', 1)->orderBy('id', 'DESC')->pluck('comprobante', 'id');
-        $vendedor       = Vendedor::selectRaw('id, CONCAT(apellido," ",nombres) as nombreCompleto')->orderBy('apellido', 'ASC')->pluck('nombreCompleto', 'id');
+        if (Auth::user()->isRole('vendedor')) {
+            $vendedor   = Auth::user()->vendedor->id;
+            $contacto  = Contacto::selectRaw('id, CONCAT(nombreEmpresa," - ",apellido," ",nombres) as nombreCompleto')->where('vendedor', $vendedor)
+                ->orderBy('nombreEmpresa', 'ASC')->pluck('nombreCompleto', 'id');
+            $vendedor       = Vendedor::selectRaw('id, CONCAT(apellido," ",nombres) as nombreCompleto')->where('id', $vendedor)
+                ->orderBy('apellido', 'ASC')->pluck('nombreCompleto', 'id');
+        }else{
+            $contacto       = Contacto::selectRaw('id, CONCAT(nombreEmpresa," - ",apellido," ",nombres) as nombreCompleto')->orderBy('nombreEmpresa', 'ASC')->pluck('nombreCompleto', 'id');
+            $vendedor       = Vendedor::selectRaw('id, CONCAT(apellido," ",nombres) as nombreCompleto')->orderBy('apellido', 'ASC')->pluck('nombreCompleto', 'id');
+        }
+        $tipocomprobante = TipoComprobante::where('id', '=', 1)->orderBy('id', 'DESC')->pluck('comprobante', 'id');        
         $formapago      = TipoFormapago::orderBy('id', 'DESC')->pluck('forma', 'id');
-
         return view('admin.pedidos.create', compact('contacto', 'tipocomprobante', 'vendedor', 'formapago'));
     }
 
     public function store(PedidoRequest $request)
     {
         $pedido   = Pedido::activo()->where("contacto", $request->contacto)->first();
-
         if (!isset($pedido->id)) {
-
             $pedido = new Pedido($request->all());
             $pedido->save();
         }
-
-
-
         return redirect()->route('detallepedido.index', ['id' => $pedido->id]);
     }
 
     public function edit($id)
     {
         $pedido = Pedido::find($id);
-
-        $contacto       = Contacto::selectRaw('id, CONCAT(nombreEmpresa," - ",apellido," ",nombres) as nombreCompleto')->orderBy('nombreEmpresa', 'ASC')->pluck('nombreCompleto', 'id');
+       
+        if (Auth::user()->isRole('vendedor')) {
+            $vendedor   = Auth::user()->vendedor->id;
+            $contacto  = Contacto::selectRaw('id, CONCAT(nombreEmpresa," - ",apellido," ",nombres) as nombreCompleto')->where('vendedor', $vendedor)
+                ->orderBy('nombreEmpresa', 'ASC')->pluck('nombreCompleto', 'id');
+            $vendedor       = Vendedor::selectRaw('id, CONCAT(apellido," ",nombres) as nombreCompleto')->where('id', $vendedor)
+                ->orderBy('apellido', 'ASC')->pluck('nombreCompleto', 'id');
+        }else{
+            $contacto       = Contacto::selectRaw('id, CONCAT(nombreEmpresa," - ",apellido," ",nombres) as nombreCompleto')->orderBy('nombreEmpresa', 'ASC')->pluck('nombreCompleto', 'id');
+            $vendedor       = Vendedor::selectRaw('id, CONCAT(apellido," ",nombres) as nombreCompleto')->orderBy('apellido', 'ASC')->pluck('nombreCompleto', 'id');
+        }
         $tipocomprobante= TipoComprobante::where('id', '=', 1)->orderBy('id', 'DESC')->pluck('comprobante', 'id');
-        $vendedor       = Vendedor::selectRaw('id, CONCAT(apellido," ",nombres) as nombreCompleto')->orderBy('apellido', 'ASC')->pluck('nombreCompleto', 'id');
         $formapago      = TipoFormapago::orderBy('id', 'DESC')->pluck('forma', 'id');
-
         return view('admin.pedidos.edit', compact('pedido', 'contacto', 'tipocomprobante', 'vendedor', 'formapago'));
     }
 

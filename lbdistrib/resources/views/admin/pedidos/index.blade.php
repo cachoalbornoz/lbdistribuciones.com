@@ -55,7 +55,9 @@
                                 <td class=" text-left">
 
                                     @if (isset($pedido->contacto))
-                                        {{ $pedido->Contacto->nombreempresa }}
+                                        <a href="{{ route('detallepedido.index', $pedido->id) }}">
+                                            {{ $pedido->Contacto->nombreempresa }}
+                                        </a>
                                     @else
                                         Info no disponible
                                     @endif
