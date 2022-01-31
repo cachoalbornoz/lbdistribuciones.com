@@ -3,7 +3,7 @@
 @section('title', 'Carga presupuesto')
 
 @section('breadcrumb')
-	{!! Breadcrumbs::render('presupuesto.facturacion', $presupuesto) !!}
+{!! Breadcrumbs::render('presupuesto.facturacion', $presupuesto) !!}
 @stop
 
 @section('content')
@@ -12,19 +12,19 @@
 	<div class="card-header">
 		<div class="row">
 			<div class="col-xs-12 col-md-12 col-lg-12">
-        		Facturación presupuesto
+				Facturación presupuesto
 			</div>
 		</div>
 	</div>
 
 
-	{!! Form::open(['route' => ['venta.registrarVtaP'], 'method' => 'post', 'class' => 'horizontal'] )  !!}
+	{!! Form::open(['route' => ['venta.registrarVtaP'], 'method' => 'post', 'class' => 'horizontal'] ) !!}
 
 	<div class="card-body">
 
 		<div class="row">
 			<div class="col-xs-12 col-md-12 col-lg-12">
-			
+
 				{!! Form::text('id_presupuesto', $presupuesto->id, ['class' => 'd-none']) !!}
 				<table class="table table-borderless" style="font-size: smaller">
 					<tr>
@@ -33,7 +33,7 @@
 							{{ $presupuesto->Contacto->nombreempresa.' '.$presupuesto->Contacto->nombreCompleto() }}
 							{!! Form::hidden('razon', $presupuesto->Contacto->nombreempresa.' '.$presupuesto->Contacto->nombreCompleto(), ['id' => 'razon']) !!}
 						</td>
-						<td style="width: 15%"> 
+						<td style="width: 15%">
 							<span class="input-group-text" id="basic-addon1">
 								<i class="fa fa-calendar text-primary"></i> &nbsp; Fecha
 							</span>
@@ -73,38 +73,36 @@
 								<div class="input-group-append">
 									<span class="input-group-text">%</span>
 								</div>
-							</div>							
+							</div>
 						</td>
 					</tr>
 				</table>
 			</div>
-		</div>				
-
-		<div class="row">
-			<div class="col-xs-12 col-sm-12 col-lg-12">
-				@include('admin.detallepresupuestos.detallefacturacion')
-			</div>
 		</div>
 
 		<div class="row">
 			<div class="col-xs-12 col-sm-12 col-lg-12">
-				<div id="totalfacturacion">
-					@include('admin.detallepresupuestos.detalletotal')
+				<div id="data">
+					@include('admin.detallepresupuestos.detallefacturacion')
 				</div>
 			</div>
 		</div>
+
 
 		<div class="row">
 			<div class="col-xs-12 col-sm-6 col-lg-6">
 				<a href="{{ route('presupuesto.index') }}" class="btn btn-light border btn-link"> Volver </a>
 			</div>
-			<div class="col-xs-12 col-sm-6 col-lg-6 text-right">
-				{!! Form::submit('Registrar venta ', ['class' => 'btn btn-success']) !!}
+			<div class="col-xs-12 col-sm-6 col-lg-4">
+
+			</div>
+			<div class="col-xs-12 col-sm-2 col-lg-2 text-center">
+				{!! Form::submit('Registrar venta ', ['class' => 'btn btn-info registra']) !!}
 			</div>
 		</div>
 
 	</div>
-	{!! Form::close()  !!}
+	{!! Form::close() !!}
 
 </div>
 
@@ -113,10 +111,19 @@
 
 @section('js')
 
-<script>		
-
+<script>
 	var route 	= '{{ route('detallepresupuesto.update') }}';
 	var token 	= $('input[name=_token]').val() ;
+
+	$( document ).ready(function() {
+		if($('.chequeada:checked').length == $('.chequeada').length){
+			$('.registra').removeClass('d-none');
+		}else{
+			$('.registra').addClass('d-none');
+		}
+	})
+
+	
 
 	function actualizar(id, producto){
 
@@ -135,8 +142,14 @@
 			dataType: 'json',
 			data 	: {id : id, cant:cantentrega, descuento : descuento},
 			success: function(data){
+				$('#data').html(data);
 
-				$('#totalfacturacion').html(data);
+				if($('.chequeada:checked').length == $('.chequeada').length){
+					$('.registra').removeClass('d-none');
+				}else{
+					$('.registra').addClass('d-none');
+				}
+
 			}
 		});
 		

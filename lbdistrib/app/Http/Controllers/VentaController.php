@@ -2,25 +2,24 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Collection;
 use App\Http\Requests\VentaRequest;
-
-use App\Models\Venta;
-use App\Models\DetalleVenta;
 use App\Models\Contacto;
-use App\Models\TipoComprobante;
-use App\Models\Vendedor;
-use App\Models\TipoFormapago;
-use App\Models\MovContacto;
-use App\Models\Pedido;
-use App\Models\Presupuesto;
-use App\Models\Pendiente;
+
 use App\Models\DetallePedido;
 use App\Models\DetallePresupuesto;
+use App\Models\DetalleVenta;
+use App\Models\MovContacto;
+use App\Models\Pedido;
+use App\Models\Pendiente;
+use App\Models\Presupuesto;
 use App\Models\Producto;
-
+use App\Models\TipoComprobante;
+use App\Models\TipoFormapago;
+use App\Models\Vendedor;
+use App\Models\Venta;
 use Carbon\Carbon;
+
+use Illuminate\Http\Request;
 
 class VentaController extends Controller
 {
@@ -34,9 +33,9 @@ class VentaController extends Controller
 
     public function index()
     {
-        $ventas     = Venta::orderBy('fecha', 'DESC')->get();
-        $vendedor   = Vendedor::selectRaw('id, CONCAT(apellido," ",nombres) as nombreCompleto')->orderBy('apellido', 'ASC')->pluck('nombreCompleto', 'id');
-        $total      = Venta::all()->sum('total');
+        $ventas   = Venta::orderBy('fecha', 'DESC')->get();
+        $vendedor = Vendedor::selectRaw('id, CONCAT(apellido," ",nombres) as nombreCompleto')->orderBy('apellido', 'ASC')->pluck('nombreCompleto', 'id');
+        $total    = Venta::all()->sum('total');
 
         return view('admin.ventas.index', compact('ventas', 'vendedor', 'total'));
     }
@@ -47,8 +46,8 @@ class VentaController extends Controller
             $ventas = Venta::orderBy('fecha', 'DESC')->get();
             $total  = Venta::all()->sum('total');
         } else {
-            $vendedor  = Vendedor::where('id', $request->vendedor)->selectRaw('id, CONCAT(apellido," ",nombres) as nombreCompleto')->orderBy('apellido', 'ASC')->pluck('nombreCompleto', 'id');
-            $ventas    = Venta::buscarvendedor($request->vendedor)->buscarfechas($request->desde, $request->hasta)->orderBy('fecha', 'DESC')->get();
+            $vendedor = Vendedor::where('id', $request->vendedor)->selectRaw('id, CONCAT(apellido," ",nombres) as nombreCompleto')->orderBy('apellido', 'ASC')->pluck('nombreCompleto', 'id');
+            $ventas   = Venta::buscarvendedor($request->vendedor)->buscarfechas($request->desde, $request->hasta)->orderBy('fecha', 'DESC')->get();
             $total    = Venta::buscarvendedor($request->vendedor)->buscarfechas($request->desde, $request->hasta)->sum('total');
         }
 
@@ -62,8 +61,8 @@ class VentaController extends Controller
                 $ventas = Venta::buscarcontacto($request->contacto)->orderBy('fecha', 'DESC')->get();
                 $total  = Venta::buscarcontacto($request->contacto)->sum('total');
             } else {
-                $ventas    = Venta::buscarcontacto($request->contacto)->buscarvendedor($request->vendedor)->buscarfechas($request->desde, $request->hasta)->orderBy('fecha', 'DESC')->get();
-                $total    = Venta::buscarcontacto($request->contacto)->buscarvendedor($request->vendedor)->buscarfechas($request->desde, $request->hasta)->sum('total');
+                $ventas = Venta::buscarcontacto($request->contacto)->buscarvendedor($request->vendedor)->buscarfechas($request->desde, $request->hasta)->orderBy('fecha', 'DESC')->get();
+                $total  = Venta::buscarcontacto($request->contacto)->buscarvendedor($request->vendedor)->buscarfechas($request->desde, $request->hasta)->sum('total');
             }
 
             $view = view('admin.ventas.detalle', compact('ventas', 'total'))->render();
@@ -74,15 +73,15 @@ class VentaController extends Controller
 
     public function ventaContacto($id)
     {
-        $contacto   = Contacto::find($id);
-        $ventas     = Venta::where('contacto', $id)->orderBy('fecha', 'DESC')->orderBy('id', 'DESC')->get();
+        $contacto = Contacto::find($id);
+        $ventas   = Venta::where('contacto', $id)->orderBy('fecha', 'DESC')->orderBy('id', 'DESC')->get();
 
         // OBTENER TOTAL VENTAS
         $totalventa = Venta::where('contacto', $id)->where('tipocomprobante', '=', 2)->sum('total');
         // OBTENER TOTAL NOTA CREDITO
         $totalnotac = Venta::where('contacto', $id)->where('tipocomprobante', '=', 8)->sum('total');
         // CALCULAR TOTAL
-        $total      = $totalventa - $totalnotac;
+        $total = $totalventa - $totalnotac;
 
         return view('admin.ventas.index', compact('id', 'ventas', 'contacto', 'total'));
     }
@@ -93,36 +92,36 @@ class VentaController extends Controller
         $nroComprobante = isset($Venta) ? $Venta->nro + 1 : 1;
 
         if ($id) {
-            $contacto   = $contacto   = Contacto::selectRaw('id, CONCAT(nombreEmpresa," - ",apellido," ",nombres) as nombreCompleto')
+            $contacto = $contacto = Contacto::selectRaw('id, CONCAT(nombreEmpresa," - ",apellido," ",nombres) as nombreCompleto')
                 ->where('id', $id)
                 ->pluck('nombreCompleto', 'id');
         } else {
-            $contacto   = Contacto::selectRaw('id, CONCAT(nombreEmpresa," - ",apellido," ",nombres) as nombreCompleto')
+            $contacto = Contacto::selectRaw('id, CONCAT(nombreEmpresa," - ",apellido," ",nombres) as nombreCompleto')
                 ->orderBy('nombreEmpresa', 'ASC')
                 ->pluck('nombreCompleto', 'id');
         }
         $tipocomprobante = TipoComprobante::where('id', '=', 2)->orWhere('id', '=', 8)
             ->orderBy('id', 'ASC')
             ->pluck('comprobante', 'id');
-        $vendedor       = Vendedor::selectRaw('id, CONCAT(apellido," ",nombres) as nombreCompleto')->orderBy('apellido', 'ASC')->pluck('nombreCompleto', 'id');
-        $formapago      = TipoFormapago::orderBy('id', 'DESC')->pluck('forma', 'id');
+        $vendedor  = Vendedor::selectRaw('id, CONCAT(apellido," ",nombres) as nombreCompleto')->orderBy('apellido', 'ASC')->pluck('nombreCompleto', 'id');
+        $formapago = TipoFormapago::orderBy('id', 'DESC')->pluck('forma', 'id');
 
         return view('admin.ventas.create', compact('id', 'contacto', 'tipocomprobante', 'vendedor', 'formapago', 'nroComprobante'));
     }
 
     public function store(VentaRequest $request)
     {
-        $venta = new Venta($request->all());
-        ($request->tipocomprobante == 8)?$venta->pagada = 1:null;
+        $venta                                            = new Venta($request->all());
+        ($request->tipocomprobante == 8) ? $venta->pagada = 1 : null;
         $venta->save();
         return redirect()->route('detalleventa.index', ['id' => $venta->id]);
     }
 
     public function registrarVtaManual(Request $request)
     {
-        $venta  = Venta::find($request->id);
-        $nro    = $venta->nro;
-        $total  = DetalleVenta::where('venta', '=', $request->id)->get()->sum('subtotal');
+        $venta = Venta::find($request->id);
+        $nro   = $venta->nro;
+        $total = DetalleVenta::where('venta', '=', $request->id)->get()->sum('subtotal');
 
         // Actualizo TOTAL VENDIDO
         $venta->total = $total;
@@ -160,8 +159,8 @@ class VentaController extends Controller
 
         /////// ACTUALIZA SALDO CONTACTO
 
-        $contacto   = Contacto::find($venta->contacto);
-        $saldo      = $contacto->saldo;
+        $contacto = Contacto::find($venta->contacto);
+        $saldo    = $contacto->saldo;
 
         if ($request->tipocomprobante == 8) {   // NOTA CREDITO
 
@@ -181,7 +180,7 @@ class VentaController extends Controller
         $contacto->save();
 
         // BUSCO EL SALDO A ESA FECHA
-        $datos      = MovContacto::where('contacto', $venta->contacto)
+        $datos = MovContacto::where('contacto', $venta->contacto)
             ->whereDate('fecha', '<=', date($venta->fecha))
             ->orderBy('fecha', 'DESC')
             ->orderBy('id', 'DESC')->first();
@@ -197,16 +196,16 @@ class VentaController extends Controller
         }
 
         /////// AGREGA MOVIMIENTO DE CTA CTE
-        $movimiento = new MovContacto();
-        $movimiento->contacto       = $venta->contacto;
+        $movimiento                  = new MovContacto();
+        $movimiento->contacto        = $venta->contacto;
         $movimiento->tipocomprobante = $request->tipocomprobante;
-        $movimiento->idcomprobante  = $venta->id;
-        $movimiento->fecha          = $venta->fecha;
-        $movimiento->concepto       = $concepto;
-        $movimiento->nro            = $nro;
-        $movimiento->debe           = $debe;
-        $movimiento->haber          = $haber;
-        $movimiento->saldo          = $nuevoSaldo;
+        $movimiento->idcomprobante   = $venta->id;
+        $movimiento->fecha           = $venta->fecha;
+        $movimiento->concepto        = $concepto;
+        $movimiento->nro             = $nro;
+        $movimiento->debe            = $debe;
+        $movimiento->haber           = $haber;
+        $movimiento->saldo           = $nuevoSaldo;
         $movimiento->save();
 
         // ACTUALIZO LOS SALDOS
@@ -215,28 +214,28 @@ class VentaController extends Controller
             ->orderBy('fecha', 'ASC')->get();
 
         foreach ($movimientos as $movimiento) {
-            $movimiento->saldo  = $nuevoSaldo + $movimiento->debe - $movimiento->haber;
-            $nuevoSaldo         = $movimiento->saldo;
+            $movimiento->saldo = $nuevoSaldo + $movimiento->debe - $movimiento->haber;
+            $nuevoSaldo        = $movimiento->saldo;
             $movimiento->save();
         }
 
         // ELIMINO PEDIDOS/PENDIENTES CON FECHA MAYOR A 60 DIAS
-        $dias   = (new Carbon)->submonths(2);
+        $dias = (new Carbon())->submonths(2);
         // Pedido::where("created_at", '<', $dias)->delete();
-        Pendiente::where("created_at", '<', $dias)->delete();
+        Pendiente::where('created_at', '<', $dias)->delete();
 
         return response()->json();
     }
 
     public function registrarVtaP(Request $request)
     {
-        $id         = $request->id_presupuesto;
+        $id          = $request->id_presupuesto;
         $presupuesto = Presupuesto::find($id);
-        $nro        = $request->nro;
+        $nro         = $request->nro;
 
-        $total      = DetallePresupuesto::where('presupuesto', '=', $id)->get()->sum('subtotal');
+        $total = DetallePresupuesto::where('presupuesto', '=', $id)->get()->sum('subtotal');
 
-        $venta = new Venta();
+        $venta                  = new Venta();
         $venta->tipocomprobante = 2; // Presupesto
         $venta->vendedor        = $presupuesto->vendedor;
         $venta->contacto        = $presupuesto->contacto;
@@ -252,44 +251,43 @@ class VentaController extends Controller
         $presupuesto->estado = 1;
         $presupuesto->save();
 
-
         // TRASPASA LOS DETALLE DE PRESUPUESTO
         $detalle = DetallePresupuesto::where('presupuesto', '=', $id)->get();
 
         foreach ($detalle as $detallePresupuesto) {
             if ($detallePresupuesto->cantidadentregada > 0) {     // PREGUNTAR SI ENTREGO AL MENOS UN PRODUCTO Y PASARLO A LA VENTA
 
-                $detalleVta             = new DetalleVenta();
-                $detalleVta->producto   = $detallePresupuesto->producto;
-                $detalleVta->venta      = $venta->id;
-                $detalleVta->precio     = $detallePresupuesto->precio;
-                $detalleVta->cantidad   = $detallePresupuesto->cantidadentregada;
-                $detalleVta->descuento  = $detallePresupuesto->descuento;
-                $detalleVta->montodesc  = $detallePresupuesto->montodesc;
-                $detalleVta->iva        = $detallePresupuesto->iva;
-                $detalleVta->subtotal   = $detallePresupuesto->subtotal;
+                $detalleVta            = new DetalleVenta();
+                $detalleVta->producto  = $detallePresupuesto->producto;
+                $detalleVta->venta     = $venta->id;
+                $detalleVta->precio    = $detallePresupuesto->precio;
+                $detalleVta->cantidad  = $detallePresupuesto->cantidadentregada;
+                $detalleVta->descuento = $detallePresupuesto->descuento;
+                $detalleVta->montodesc = $detallePresupuesto->montodesc;
+                $detalleVta->iva       = $detallePresupuesto->iva;
+                $detalleVta->subtotal  = $detallePresupuesto->subtotal;
                 $detalleVta->save();
 
                 // ACTUALIZO STOCK PRODUCTO
-                $producto = Producto::find($detallePresupuesto->producto);
+                $producto              = Producto::find($detallePresupuesto->producto);
                 $producto->stockactual = $producto->stockactual - $detallePresupuesto->cantidadentregada;
                 $producto->save();
             }
         }
 
         /////// ACTUALIZA SALDO CONTACTO
-        $contacto       = Contacto::find($presupuesto->contacto);
-        $saldo          = $contacto->saldo;
+        $contacto = Contacto::find($presupuesto->contacto);
+        $saldo    = $contacto->saldo;
 
-        $nuevoSaldo     = $saldo + $total;
-        $concepto       = 'VENTA';
-        $debe           = $total;
-        $haber          = 0;
+        $nuevoSaldo      = $saldo + $total;
+        $concepto        = 'VENTA';
+        $debe            = $total;
+        $haber           = 0;
         $contacto->saldo = $nuevoSaldo;
         $contacto->save();
 
         // BUSCO EL SALDO A ESA FECHA
-        $datos      = MovContacto::where('contacto', $presupuesto->contacto)
+        $datos = MovContacto::where('contacto', $presupuesto->contacto)
             ->whereDate('fecha', '<=', $presupuesto->fecha)
             ->orderBy('fecha', 'DESC')
             ->orderBy('id', 'DESC')->first();
@@ -301,16 +299,16 @@ class VentaController extends Controller
         }
 
         /////// AGREGA MOVIMIENTO DE CTA CTE
-        $movimiento = new MovContacto();
-        $movimiento->contacto       = $venta->contacto;
+        $movimiento                  = new MovContacto();
+        $movimiento->contacto        = $venta->contacto;
         $movimiento->tipocomprobante = 2;
-        $movimiento->idcomprobante  = $venta->id;
-        $movimiento->fecha          = $venta->fecha;
-        $movimiento->concepto       = $concepto;
-        $movimiento->nro            = $venta->nro;
-        $movimiento->debe           = $debe;
-        $movimiento->haber          = $haber;
-        $movimiento->saldo          = $nuevoSaldo;
+        $movimiento->idcomprobante   = $venta->id;
+        $movimiento->fecha           = $venta->fecha;
+        $movimiento->concepto        = $concepto;
+        $movimiento->nro             = $venta->nro;
+        $movimiento->debe            = $debe;
+        $movimiento->haber           = $haber;
+        $movimiento->saldo           = $nuevoSaldo;
         $movimiento->save();
 
         // ACTUALIZO LOS SALDOS
@@ -319,8 +317,8 @@ class VentaController extends Controller
             ->orderBy('fecha', 'ASC')->get();
 
         foreach ($movimientos as $movimiento) {
-            $movimiento->saldo  = $nuevoSaldo + $movimiento->debe - $movimiento->haber;
-            $nuevoSaldo         = $movimiento->saldo;
+            $movimiento->saldo = $nuevoSaldo + $movimiento->debe - $movimiento->haber;
+            $nuevoSaldo        = $movimiento->saldo;
             $movimiento->save();
         }
 
@@ -329,19 +327,17 @@ class VentaController extends Controller
 
     public function registrarVta(Request $request)
     {
-        $id         = $request->id_pedido;
-        $pedido     = Pedido::find($id);
-        $nro        = $request->nro;
-        $contacto   = Contacto::find($pedido->contacto);
+        $id       = $request->id_pedido;
+        $pedido   = Pedido::find($id);
+        $nro      = $request->nro;
+        $contacto = Contacto::find($pedido->contacto);
 
-        $cantidadEntregada  = DetallePedido::where('pedido', $id)->where('cantidadentregada', '>', 0)->sum('cantidadentregada');
-
+        $cantidadEntregada = DetallePedido::where('pedido', $id)->where('cantidadentregada', '>', 0)->sum('cantidadentregada');
 
         if ($cantidadEntregada > 0) {
-
             $total = 0;
 
-            $venta = new Venta();
+            $venta                  = new Venta();
             $venta->tipocomprobante = 2; // Presupesto
             $venta->vendedor        = $pedido->vendedor;
             $venta->contacto        = $pedido->contacto;
@@ -357,80 +353,78 @@ class VentaController extends Controller
             $pedido->estado = 1;
             $pedido->save();
 
-            // 
-            $notification = array(
-                'message' => 'Se registró la venta correctamente !',
-                'alert-type' => 'success'
-            );
+            //
+            $notification = [
+                'message'    => 'Se registró la venta correctamente !',
+                'alert-type' => 'success',
+            ];
 
             // TRASPASA LOS DETALLE DE PEDIDO
             $detalle = DetallePedido::where('pedido', '=', $id)->get();
 
             foreach ($detalle as $detallePedido) {
-
                 if ($detallePedido->descuento < 1) {
                     $porcentaje = (1 - $detallePedido->descuento);
                 } else {
                     $porcentaje = $detallePedido->descuento;
                 }
 
-                $detallePedido->iva                  = $detallePedido->precio * $detallePedido->cantidadentregada * 0.21;
-                $detallePedido->subtotal             = $detallePedido->precio * $detallePedido->cantidadentregada * $porcentaje;
-                $detallePedido->montodesc            = ($detallePedido->precio * $detallePedido->cantidadentregada) - $detallePedido->subtotal;
+                $detallePedido->iva       = $detallePedido->precio * $detallePedido->cantidadentregada * 0.21;
+                $detallePedido->subtotal  = $detallePedido->precio * $detallePedido->cantidadentregada * $porcentaje;
+                $detallePedido->montodesc = ($detallePedido->precio * $detallePedido->cantidadentregada) - $detallePedido->subtotal;
                 $detallePedido->save();
 
                 if ($detallePedido->cantidadentregada > 0) {     // PREGUNTAR SI ENTREGO AL MENOS UN PRODUCTO Y PASARLO A LA VENTA
 
-                    $detalleVta             = new DetalleVenta();
-                    $detalleVta->producto   = $detallePedido->producto;
-                    $detalleVta->venta      = $venta->id;
-                    $detalleVta->precio     = $detallePedido->precio;
-                    $detalleVta->cantidad   = $detallePedido->cantidadentregada;
-                    $detalleVta->descuento  = $detallePedido->descuento;
-                    $detalleVta->montodesc  = $detallePedido->montodesc;
-                    $detalleVta->iva        = $detallePedido->iva;
-                    $detalleVta->subtotal   = $detallePedido->subtotal;
+                    $detalleVta            = new DetalleVenta();
+                    $detalleVta->producto  = $detallePedido->producto;
+                    $detalleVta->venta     = $venta->id;
+                    $detalleVta->precio    = $detallePedido->precio;
+                    $detalleVta->cantidad  = $detallePedido->cantidadentregada;
+                    $detalleVta->descuento = $detallePedido->descuento;
+                    $detalleVta->montodesc = $detallePedido->montodesc;
+                    $detalleVta->iva       = $detallePedido->iva;
+                    $detalleVta->subtotal  = $detallePedido->subtotal;
                     $detalleVta->save();
 
                     // ACTUALIZO STOCK PRODUCTO
-                    $producto = Producto::find($detallePedido->producto);
+                    $producto              = Producto::find($detallePedido->producto);
                     $producto->stockactual = $producto->stockactual - $detallePedido->cantidadentregada;
                     $producto->save();
                 }
 
                 // CARGO PENDIENTES SI EXISTEN DIFERENCIAS
                 if ($detallePedido->cantidadentregada < $detallePedido->cantidad) {
-
-                    $nuevoPendiente = new Pendiente();
-                    $nuevoPendiente->contacto   = $pedido->contacto;
-                    $nuevoPendiente->producto   = $detallePedido->producto;
-                    $nuevoPendiente->precio     = $detallePedido->precio;
-                    $nuevoPendiente->cantidad   = $detallePedido->cantidad - $detallePedido->cantidadentregada;
-                    $nuevoPendiente->descuento  = $detallePedido->descuento;
+                    $nuevoPendiente            = new Pendiente();
+                    $nuevoPendiente->contacto  = $pedido->contacto;
+                    $nuevoPendiente->producto  = $detallePedido->producto;
+                    $nuevoPendiente->precio    = $detallePedido->precio;
+                    $nuevoPendiente->cantidad  = $detallePedido->cantidad - $detallePedido->cantidadentregada;
+                    $nuevoPendiente->descuento = $detallePedido->descuento;
                     $nuevoPendiente->save();
 
-                    $notification = array(
-                        'message' => 'Se generaron movimientos pendientes !',
-                        'alert-type' => 'info'
-                    );
+                    $notification = [
+                        'message'    => 'Se generaron movimientos pendientes !',
+                        'alert-type' => 'info',
+                    ];
                 }
             }
 
-            $total              = DetallePedido::where('pedido', $id)->sum('subtotal');
-            $venta->total       = $total;
+            $total        = DetallePedido::where('pedido', $id)->sum('subtotal');
+            $venta->total = $total;
             $venta->save();
 
             /////// ACTUALIZA SALDO CONTACTO
-            $saldo              = $contacto->saldo;
-            $nuevoSaldo         = $saldo + $total;
-            $concepto           = 'VENTA';
-            $debe               = $total;
-            $haber              = 0;
-            $contacto->saldo    = $nuevoSaldo;
+            $saldo           = $contacto->saldo;
+            $nuevoSaldo      = $saldo + $total;
+            $concepto        = 'VENTA';
+            $debe            = $total;
+            $haber           = 0;
+            $contacto->saldo = $nuevoSaldo;
             $contacto->save();
 
             // BUSCO EL SALDO A ESA FECHA
-            $datos      = MovContacto::where('contacto', $pedido->contacto)
+            $datos = MovContacto::where('contacto', $pedido->contacto)
                 ->whereDate('fecha', '<=', $pedido->fecha)
                 ->orderBy('fecha', 'DESC')
                 ->orderBy('id', 'DESC')->first();
@@ -442,16 +436,16 @@ class VentaController extends Controller
             }
 
             /////// AGREGA MOVIMIENTO DE CTA CTE
-            $movimiento = new MovContacto();
-            $movimiento->contacto       = $venta->contacto;
+            $movimiento                  = new MovContacto();
+            $movimiento->contacto        = $venta->contacto;
             $movimiento->tipocomprobante = 2;
-            $movimiento->idcomprobante  = $venta->id;
-            $movimiento->fecha          = $venta->fecha;
-            $movimiento->concepto       = $concepto;
-            $movimiento->nro            = $venta->nro;
-            $movimiento->debe           = $debe;
-            $movimiento->haber          = $haber;
-            $movimiento->saldo          = $nuevoSaldo;
+            $movimiento->idcomprobante   = $venta->id;
+            $movimiento->fecha           = $venta->fecha;
+            $movimiento->concepto        = $concepto;
+            $movimiento->nro             = $venta->nro;
+            $movimiento->debe            = $debe;
+            $movimiento->haber           = $haber;
+            $movimiento->saldo           = $nuevoSaldo;
             $movimiento->save();
 
             // ACTUALIZO LOS SALDOS
@@ -460,16 +454,15 @@ class VentaController extends Controller
                 ->orderBy('fecha', 'ASC')->get();
 
             foreach ($movimientos as $movimiento) {
-                $movimiento->saldo  = $nuevoSaldo + $movimiento->debe - $movimiento->haber;
-                $nuevoSaldo         = $movimiento->saldo;
+                $movimiento->saldo = $nuevoSaldo + $movimiento->debe - $movimiento->haber;
+                $nuevoSaldo        = $movimiento->saldo;
                 $movimiento->save();
             }
         } else {
-
-            $notification = array(
-                'message' => 'No se generó ningún movimiento !',
-                'alert-type' => 'error'
-            );
+            $notification = [
+                'message'    => 'No se generó ningún movimiento !',
+                'alert-type' => 'error',
+            ];
         }
 
         // ELIMINO PEDIDOS/PENDIENTES CON FECHA MAYOR A 60 DIAS
@@ -482,8 +475,8 @@ class VentaController extends Controller
 
     public function destroy(Request $request)
     {
-        $venta      = Venta::find($request->id);
-        $contacto   = $venta->contacto;
+        $venta    = Venta::find($request->id);
+        $contacto = $venta->contacto;
         $venta->delete();
 
         // ANULO EL MOVIMIENTO
@@ -491,12 +484,12 @@ class VentaController extends Controller
         $movimiento->delete();
 
         // ACTUALIZO EL SALDO
-        $Contacto   = Contacto::find($contacto);
-        $nuevoSaldo = 0;
-        $movimientos= MovContacto::where('contacto', $contacto)->orderBy('fecha', 'ASC')->get();
+        $Contacto    = Contacto::find($contacto);
+        $nuevoSaldo  = 0;
+        $movimientos = MovContacto::where('contacto', $contacto)->orderBy('fecha', 'ASC')->get();
         foreach ($movimientos as $movimiento) {
-            $movimiento->saldo  = $nuevoSaldo + $movimiento->debe - $movimiento->haber;
-            $nuevoSaldo         = $movimiento->saldo;
+            $movimiento->saldo = $nuevoSaldo + $movimiento->debe - $movimiento->haber;
+            $nuevoSaldo        = $movimiento->saldo;
             $movimiento->save();
         }
         $Contacto->saldo = abs($nuevoSaldo);
@@ -507,7 +500,7 @@ class VentaController extends Controller
         $totalnotac = Venta::where('contacto', $contacto)->where('tipocomprobante', '=', 8)->sum('total');
         $total      = $totalventa - $totalnotac;
 
-        $vistaVentas= view('admin.ventas.detalle', compact('ventas', 'total', 'contacto'))->render();
+        $vistaVentas = view('admin.ventas.detalle', compact('ventas', 'total', 'contacto'))->render();
         return response()->json($vistaVentas);
     }
 }
