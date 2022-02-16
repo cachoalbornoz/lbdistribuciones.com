@@ -11,13 +11,10 @@
     </div>
     <div class="col-xs-12 col-sm-6 col-lg-6 mb-1">
         <div class="btn-group d-flex" role="group" aria-label="...">
-            <a href="{{ route('compra.compraProveedor', $proveedor->id) }}"
-                class="btn btn-secondary w-100">Compras</a>
+            <a href="{{ route('compra.compraProveedor', $proveedor->id) }}" class="btn btn-secondary w-100">Compras</a>
             <a href="{{ route('pago.pagoProveedor', $proveedor->id) }}" class="btn btn-secondary w-100">Pagos</a>
-            <a href="{{ route('movproveedor.index', $proveedor->id) }}" class="btn btn-secondary w-100">Movimientos
-                cta cte</a>
-            <a href="{{ route('movproveedor.deuda', $proveedor->id) }}" class="btn btn-secondary w-100">Deuda
-                Actual</a>
+            <a href="{{ route('movproveedor.index', $proveedor->id) }}" class="btn btn-secondary w-100">Mov</a>
+            <a href="{{ route('movproveedor.deuda', $proveedor->id) }}" class="btn btn-secondary w-100">Deuda</a>
         </div>
     </div>
 </div>

@@ -50,35 +50,34 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach ($cheques as $cheque)
-                    <tr>
-                        <td>{{ $cheque->nrocheque }}</td>
-                        <td>{{ date('d-m-Y', strtotime($cheque->fechacobro)) }}</td>
-                        <td>{{ $cheque->Banco->nombre }}</td>
-                        <td>{{ $cheque->importe }} </td>
-                        <td>
-                            <input type="checkbox" id="check{{ $cheque->id }}" name="check{{ $cheque->id }}"
-                                @if ($cheque->pagado == 1) checked @endif value="{{ $cheque->id }}"
-                                onclick="asociarCheque({{ $cheque->id }})" class="chkcheque">
-                        </td>
-                        <td>{{ $cheque->recibo }}</td>
-                    </tr>
+                @foreach ($detallecheque as $detalle)
+                <tr>
+                    <td>{{ $detalle->nrocheque }} </td>
+                    <td>{{ date('d-m-Y', strtotime($detalle->fechacobro)) }} </td>
+                    <td>{{ $detalle->Banco->nombre }} </td>
+                    <td>{{ number_format($detalle->importe, 2, ',', '.') }} </td>
+                    <td>
+                        <input type="checkbox" id="check{{ $detalle->id }}" name="check{{ $detalle->id }}" @if ($detalle->pagado == 1) checked @endif value="{{ $detalle->id }}"
+                        onclick="asociarCheque({{ $detalle->id }})" class="chkcheque">
+                    </td>
+                    <td>{{ $detalle->recibo }}</td>
+                </tr>
                 @endforeach
 
-                @foreach ($detallecheque as $detalle)
-                    <tr>
-                        <td>{{ $detalle->nrocheque }} </td>
-                        <td>{{ date('d-m-Y', strtotime($detalle->fechacobro)) }} </td>
-                        <td>{{ $detalle->Banco->nombre }} </td>
-                        <td>{{ number_format($detalle->importe, 2, ',', '.') }} </td>
-                        <td>
-                            <input type="checkbox" id="check{{ $detalle->id }}" name="check{{ $detalle->id }}"
-                                @if ($detalle->pagado == 1) checked @endif value="{{ $detalle->id }}"
-                                onclick="asociarCheque({{ $detalle->id }})" class="chkcheque">
-                        </td>
-                        <td>{{ $detalle->recibo }}</td>
-                    </tr>
+                @foreach ($cheques as $cheque)
+                <tr>
+                    <td>{{ $cheque->nrocheque }}</td>
+                    <td>{{ date('d-m-Y', strtotime($cheque->fechacobro)) }}</td>
+                    <td>{{ $cheque->Banco->nombre }}</td>
+                    <td>{{ $cheque->importe }} </td>
+                    <td>
+                        <input type="checkbox" id="check{{ $cheque->id }}" name="check{{ $cheque->id }}" @if ($cheque->pagado == 1) checked @endif value="{{ $cheque->id }}"
+                        onclick="asociarCheque({{ $cheque->id }})" class="chkcheque">
+                    </td>
+                    <td>{{ $cheque->recibo }}</td>
+                </tr>
                 @endforeach
+
                 <tr class="bg-light">
                     <td></td>
                     <td></td>

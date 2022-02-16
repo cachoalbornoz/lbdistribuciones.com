@@ -3,111 +3,106 @@
 @section('title', 'Detalle pago')
 
 @section('breadcrumb')
-    {!! Breadcrumbs::render('pago.detalle', $pago) !!}
+{!! Breadcrumbs::render('pago.detalle', $pago) !!}
 @stop
 
 @section('content')
 
-    <div class="card">
-        <div class="card-header">
-            <div class="row mb-4">
-                <div class="col-xs-12 col-md-4 col-lg-4">
-                    {{ ucwords($pago->Tipocomprobante->comprobante) }}
-                    Nro <b> {{ $pago->nro }} </b> :: <b>{{ $pago->Proveedor->nombreempresa }} </b>
-                    {{ $pago->Proveedor->nombreCompleto() }}
-                </div>
-                <div class="col-xs-12 col-sm-2 col-lg-2">
-                    Fecha :: <b> {{ date('d-m-Y', strtotime($pago->fecha)) }}</b>
-                </div>
-                <div class="col-xs-12 col-md-4 col-lg-4">
-                    <input type="hidden" id="aFavor" name="aFavor" value="{{ $pago->Proveedor->remanente }}">
-                    Saldo favor :: <span class=" font-weight-bolder"> {{ $pago->Proveedor->remanente }}</span>
-                </div>
-                <div class="col-xs-12 col-sm-1 col-lg-1 text-center">
-                    <a href="#" onclick="javascript:cerrarOrden({{ $pago->id }})" class="btn btn-outline-info btn-sm"
-                        title="Guardar">
-                        <i class="fa fa-floppy-o" aria-hidden="true"></i>
-                    </a>
-                </div>
-                <div class="col-xs-12 col-sm-1 col-lg-1 text-center">
-                    <a href="#" onclick="javascript:anular({{ $pago->id }})" class="btn btn-outline-danger btn-sm"
-                        title="Anula">
-                        <i class="fa fa-trash-o" aria-hidden="true"></i>
-                    </a>
-                </div>
+<div class="card">
+    <div class="card-header">
+        <div class="row mb-4">
+            <div class="col-xs-12 col-md-4 col-lg-4">
+                {{ ucwords($pago->Tipocomprobante->comprobante) }}
+                Nro <b> {{ $pago->nro }} </b> :: <b>{{ $pago->Proveedor->nombreempresa }} </b>
+                {{ $pago->Proveedor->nombreCompleto() }}
             </div>
-            <div class="row">
-                <div class="col-xs-12 col-sm-2 col-lg-2 text-center">
-                    <div class="input-group-prepend">
-                        <span class=" input-group-text">
-                            Efectivo
-                        </span>
-                        <input type="number" id="totalEfectivo" name="totalEfectivo" disabled value="{{ $totalEfectivo }}"
-                            class="form-control text-center font-weight-bolder">
-                    </div>
-                </div>
-                <div class="col-xs-12 col-sm-2 col-lg-2 text-center">
-                    <div class="input-group-prepend">
-                        <span class=" input-group-text">
-                            Cheques
-                        </span>
-                        <input type="number" id="totalCheque" name="totalCheque" disabled value="{{ $totalCheque }}"
-                            class="form-control text-center font-weight-bolder">
-                    </div>
-                </div>
-                <div class="col-xs-12 col-sm-2 col-lg-2 text-center">
-                    <div class="input-group-prepend">
-                        <span class=" input-group-text">
-                            Transferencia
-                        </span>
-                        <input type="number" id="totalTransferencia" name="totalTransferencia" disabled
-                            value="{{ $totalTransferencia }}" class="form-control text-center font-weight-bolder">
-                    </div>
-                </div>
-                <div class="col-xs-12 col-sm-2 col-lg-2 text-center">
-                    <div class="input-group-prepend">
-                        <input type="hidden" id="Valores" name="Valores" value="0">
-                    </div>
-                </div>
-                <div class="col-xs-12 col-sm-2 col-lg-2 text-center">
-                    <input type="hidden" id="inputado" name="inputado" value="{{ number_format($totalAutorizado, 2) }}">
-                </div>
-                <div class="col-xs-12 col-sm-1 col-lg-1 text-center">
-                    <span class="form-control text-center bg-danger text-white" id="txtPendiente">
-                        Falta
-                    </span>
-                </div>
-                <div class="col-xs-12 col-sm-1 col-lg-1 text-center">
-                    <input type="number" id="pendiente" name="pendiente" value="0" class=" form-control text-center">
-                </div>
+            <div class="col-xs-12 col-sm-2 col-lg-2">
+                Fecha :: <b> {{ date('d-m-Y', strtotime($pago->fecha)) }}</b>
+            </div>
+            <div class="col-xs-12 col-md-4 col-lg-4">
+                <input type="hidden" id="aFavor" name="aFavor" value="{{ $pago->Proveedor->remanente }}">
+                Saldo favor :: <span class=" font-weight-bolder"> {{ $pago->Proveedor->remanente }}</span>
+            </div>
+            <div class="col-xs-12 col-sm-1 col-lg-1 text-center">
+                <a href="#" onclick="javascript:cerrarOrden({{ $pago->id }})" class="btn btn-outline-info btn-sm" title="Guardar">
+                    <i class="fa fa-floppy-o" aria-hidden="true"></i>
+                </a>
+            </div>
+            <div class="col-xs-12 col-sm-1 col-lg-1 text-center">
+                <a href="#" onclick="javascript:anular({{ $pago->id }})" class="btn btn-outline-danger btn-sm" title="Anula">
+                    <i class="fa fa-trash-o" aria-hidden="true"></i>
+                </a>
             </div>
         </div>
-
-        <div class="card-body">
-
-            {!! Form::hidden('pago', $pago->id, ['id' => 'pago', 'class' => 'form-control']) !!}
-
-            <div class="imputacion">
-                @include('admin.detalleordenpagos.detalleimputacion')
+        <div class="row">
+            <div class="col-xs-12 col-sm-2 col-lg-2 text-center">
+                <div class="input-group-prepend">
+                    <span class=" input-group-text">
+                        Efectivo
+                    </span>
+                    <input type="number" id="totalEfectivo" name="totalEfectivo" disabled value="{{ $totalEfectivo }}" class="form-control text-center font-weight-bolder">
+                </div>
             </div>
-
-            <div class="cheque">
-                @include('admin.detalleordenpagos.detallecheque')
+            <div class="col-xs-12 col-sm-2 col-lg-2 text-center">
+                <div class="input-group-prepend">
+                    <span class=" input-group-text">
+                        Cheques
+                    </span>
+                    <input type="number" id="totalCheque" name="totalCheque" disabled value="{{ $totalCheque }}" class="form-control text-center font-weight-bolder">
+                </div>
             </div>
-
-            <div class="efectivo">
-                @include('admin.detalleordenpagos.detalleefectivo')
+            <div class="col-xs-12 col-sm-2 col-lg-2 text-center">
+                <div class="input-group-prepend">
+                    <span class=" input-group-text">
+                        Transferencia
+                    </span>
+                    <input type="number" id="totalTransferencia" name="totalTransferencia" disabled value="{{ $totalTransferencia }}" class="form-control text-center font-weight-bolder">
+                </div>
+            </div>
+            <div class="col-xs-12 col-sm-1 col-lg-1 text-center">
+                <div class="input-group-prepend">
+                    <input type="hidden" id="Valores" name="Valores" value="0">
+                </div>
+            </div>
+            <div class="col-xs-12 col-sm-1 col-lg-1 text-center">
+                <input type="hidden" id="inputado" name="inputado" value="{{ $totalAutorizado }}">
+            </div>
+            <div class="col-xs-12 col-sm-2 col-lg-2 text-center">
+                <span class="form-control text-center bg-danger text-white" id="txtPendiente">
+                    Falta
+                </span>
+            </div>
+            <div class="col-xs-12 col-sm-2 col-lg-2 text-center">
+                <input type="number" id="pendiente" name="pendiente" value="0" class=" form-control text-center">
             </div>
         </div>
     </div>
+
+    <div class="card-body">
+
+        {!! Form::hidden('pago', $pago->id, ['id' => 'pago', 'class' => 'form-control']) !!}
+
+        <div class="imputacion">
+            @include('admin.detalleordenpagos.detalleimputacion')
+        </div>
+
+        <div class="cheque">
+            @include('admin.detalleordenpagos.detallecheque')
+        </div>
+
+        <div class="efectivo">
+            @include('admin.detalleordenpagos.detalleefectivo')
+        </div>
+    </div>
+</div>
 
 
 @endsection
 
 @section('js')
 
-    <script>
-        let comprobante = '{{ ucwords(strtolower($pago->Tipocomprobante->comprobante)) }}';
+<script>
+    let comprobante = '{{ ucwords(strtolower($pago->Tipocomprobante->comprobante)) }}';
 
         // Calcular total 
         var totalPagado = 0;
@@ -356,5 +351,5 @@
                 }
             })
         }
-    </script>
+</script>
 @stop

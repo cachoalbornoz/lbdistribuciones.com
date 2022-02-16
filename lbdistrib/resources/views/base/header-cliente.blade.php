@@ -9,7 +9,7 @@
                 <span class="   @if ($contacto->saldo - $contacto->remanente < 0)
                         text-danger
                         @endif">
-                        {{ number_format($contacto->saldo - $contacto->remanente, 2) }}
+                    {{ number_format($contacto->saldo - $contacto->remanente, 2) }}
                 </span>
             </a>
         </div>
@@ -18,8 +18,8 @@
         <div class="btn-group d-flex" role="group" aria-label="..">
             <a href="{{ route('venta.ventaContacto', $contacto->id) }}" class="btn btn-secondary w-100">Ventas</a>
             <a href="{{ route('cobro.cobroContacto', $contacto->id) }}" class="btn btn-secondary w-100">Cobros</a>
-            <a href="{{ route('movcontacto.index', $contacto->id) }}" class="btn btn-secondary w-100">Movimientos</a>
-            <a href="{{ route('movcontacto.deuda', $contacto->id) }}" class="btn btn-secondary w-100">Deuda Actual</a>
+            <a href="{{ route('movcontacto.index', $contacto->id) }}" class="btn btn-secondary w-100">Mov</a>
+            <a href="{{ route('movcontacto.deuda', $contacto->id) }}" class="btn btn-secondary w-100">Deuda</a>
         </div>
     </div>
 </div>
