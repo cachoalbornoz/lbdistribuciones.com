@@ -138,10 +138,7 @@
                     productos: arrProductos
                 },
                 success: function(data) {
-
                     window.location = 'detallepresupuesto/' + data + '/detalle';
-
-                    console.log('detallepresupuesto/' + data + '/detalle')
                 }
             });
 

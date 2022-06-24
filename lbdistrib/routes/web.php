@@ -1,5 +1,9 @@
 <?php
 
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Route;
+
+
 Route::group(['middleware' => 'preventBackHistory'], function () {
     Route::get('password-reset', 'PasswordController@showForm');
     Route::post('password-reset', 'PasswordController@sendPasswordResetToken')->name('password-reset');
@@ -56,6 +60,7 @@ Route::group(['middleware' => 'preventBackHistory'], function () {
         Route::get('vendedor/', ['uses' => 'VendedorController@index', 'as' => 'vendedor.index']);
         Route::get('vendedor/asociar/{id}', ['uses' => 'VendedorController@asociar', 'as' => 'vendedor.asociar']);
         Route::post('vendedor/', ['uses' => 'VendedorController@update', 'as' => 'vendedor.update']);
+        Route::post('vendedor/actualizar/{id?}', ['uses' => 'VendedorController@actualizar', 'as' => 'vendedor.actualizar']);
 
         Route::resource('contacto', 'ContactoController');
         Route::get('contacto/{contacto}/show', ['uses' => 'ContactoController@show', 'as' => 'contacto.show']);
